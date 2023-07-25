@@ -1,0 +1,18 @@
+---
+ - name: Install Nginx
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: update system
+      command: yum update -y
+    - name: install nginx
+      command: amazon-linux-extras install nginx1 -y
+    - name: Start Nginx
+      command: systemctl start nginx
+    - name: Enable nginx
+      command: systemctl enable nginx
+    - name: check nginx version
+      command: nginx -v
+    - name: check nginx status
+      command: systemctl status nginx

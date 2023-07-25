@@ -1,0 +1,11 @@
+---
+ - name: update python to 3.10
+   hosts: all
+   become: yes
+
+   tasks:
+#    - name: 3.10 installation
+#      command: zypper install -y python310
+    - name: refresh
+      command: zypper refresh
+   

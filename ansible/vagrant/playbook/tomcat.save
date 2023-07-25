@@ -1,0 +1,41 @@
+---
+ - name: tomcat installation
+   hosts: all
+   become: yes
+   tasks:
+    - name: update system
+      apt: upgrade=yes update_cache=yes
+
+    - name: install java
+      apt: name=default-jdk state=latest
+
+    - name: create tomcat user
+      user: name=tomcat
+
+    - name: create tomcat group
+      group: name=tomcat
+
+    - name: create tomcat directory
+      file: path=/opt/tomcat state=directory
+
+    - name: download and unarchive tomcat
+      unarchive: src=https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.tar.gz dest=/opt/tomcat remote_src=yes 
+https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz
+    - name: create link
+      file: src=/opt/tomcat/apache-tomcat-9.0.62 dest=/opt/tomcat/latest state=link 
+
+    - name: make executable
+      file: dest=/opt/tomcat/latest mode=777 state=directory recurse=yes
+
+    - name: service file
+      template: src=/home/jan/progs/ansible/playbook/tomcatservice dest=/etc/systemd/system/tomcat.service
+
+    - name: change serv file mode
+      file: dest=/etc/systemd/system/tomcat.service mode=777
+      
+    - name: reload systemctl
+      shell: systemctl daemon-reload
+
+    - name: run tomcat
+      shell: systemctl start tomcat 
+      

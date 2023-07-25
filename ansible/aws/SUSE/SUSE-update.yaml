@@ -1,0 +1,13 @@
+---
+ - name: update SLES rep
+   hosts: all
+   become: yes
+   tasks:
+    - name: Add Nano Repo
+      command: zypper addrepo -G https://download.opensuse.org/repositories/editors/openSUSE_Leap_15.4/editors.repo
+    - name: Update package cache
+      command: zypper -n refresh
+    - name: Update
+      command: zypper update -y
+    - name: Install Nano
+      command: zypper install -y nano

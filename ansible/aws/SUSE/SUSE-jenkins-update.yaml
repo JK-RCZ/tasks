@@ -1,0 +1,22 @@
+---
+ - name: Update Jenkins
+   hosts: all
+   become: yes
+   
+
+   tasks:
+    - name: Create Dump File
+      command: touch jenkins-previous-version.txt
+    - name: Detecting Current Jenkins Version
+      command: jenkins --version > jenkins-previous-version.txt
+    - name: Copying Rename Script
+      ansible.builtin.copy: 
+           src: /home/jan/projects/ansible/aws/SUSE/rename-jenkins-binary.sh
+           dest: /home/ec2-user/rename-jenkins-binary.sh
+           mode: '0755'
+    - name: Run The Rename Script
+      ansible.builtin.script: /home/jan/projects/ansible/aws/SUSE/rename-jenkins-binary.sh
+    - name: copy new jenkins.war from Downloads
+      copy: 
+           src: /home/jan/Downloads/jenkins.war
+           dest: /usr/share/java/jenkins.war

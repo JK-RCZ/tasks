@@ -1,0 +1,17 @@
+---
+
+# Docker is in stock on SUSE, you just need to enable it.
+ - name: Enable Docker
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: Start Docker
+      command: systemctl start docker
+    - name: Enable Docker
+      command: systemctl enable docker
+    - name: Add ec2-user To Docker Group
+      command: usermod -aG docker ec2-user
+    - name: Rebooting System
+      command: reboot
+    

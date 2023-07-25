@@ -1,0 +1,8 @@
+---
+ - name: replace index.html
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: replace index.html
+      template: src=~/projects/ansible/aws/index.html dest=/usr/share/nginx/html/index.html

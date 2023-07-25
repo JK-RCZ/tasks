@@ -1,0 +1,12 @@
+---
+ - name: Install Nginx
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: install nginx
+      command: zypper install -y nginx
+    - name: Start Nginx
+      command: systemctl start nginx
+    - name: Enable nginx
+      command: systemctl enable nginx

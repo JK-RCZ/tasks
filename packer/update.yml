@@ -1,0 +1,9 @@
+---
+ - name: Update System
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: update system
+      apt: upgrade=yes update_cache=yes
+    

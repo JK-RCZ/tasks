@@ -1,0 +1,5 @@
+---
+ansible_port : 2222
+ansible_user : vagrant
+ansible_ssh_private_key_file : /home/jan/.ssh/id_rsa
+

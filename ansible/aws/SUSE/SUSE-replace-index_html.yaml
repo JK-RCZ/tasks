@@ -1,0 +1,11 @@
+---
+ - name: replace index.html with php
+   hosts: all
+   become: yes
+   tasks:
+#    - name: delete index.html
+#      command: rm /srv/www/htdocs/index.html
+    - name: copy index.php
+      copy: 
+         src: /home/jan/projects/ansible/aws/SUSE/index.php
+         dest: /srv/www/htdocs/index.php

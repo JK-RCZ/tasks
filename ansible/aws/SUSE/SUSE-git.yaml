@@ -1,0 +1,9 @@
+---
+ - name: install git
+   hosts: all
+   become: yes
+   tasks:
+    - name: git installation
+      community.general.zypper:
+       name: git
+       state: present

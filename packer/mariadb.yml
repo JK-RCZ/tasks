@@ -1,0 +1,17 @@
+---
+ - name: mariadb installation
+   hosts: all
+   become: yes
+   tasks:
+    - name: update system
+      apt: upgrade=yes update_cache=yes
+    
+    - name: install mariadb server
+      apt: name=mariadb-server state=latest
+
+    - name: reload systemctl
+      shell: systemctl daemon-reload
+
+    - name: run mariadb
+      shell: systemctl start mariadb 
+      

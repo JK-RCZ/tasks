@@ -1,0 +1,8 @@
+---
+ - name: ping
+   hosts: all
+   become: yes
+
+   tasks:
+   - name: ping da servers!
+     ping:

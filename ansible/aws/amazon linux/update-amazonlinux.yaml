@@ -1,0 +1,7 @@
+---
+ - name: update amazonlinux rep
+   hosts: all
+   become: yes
+   tasks:
+    - name: update
+      command: yum update -y

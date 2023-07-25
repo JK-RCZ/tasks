@@ -1,0 +1,20 @@
+---
+ - name: mysql installation
+   hosts: all
+   become: yes
+   tasks:
+    - name: update system
+      apt: upgrade=yes update_cache=yes
+    
+    - name: install mysql server
+      apt: name=mysql-server state=latest
+
+    - name: install mysql client
+      apt: name=mysql-client state=latest
+
+    - name: reload systemctl
+      shell: systemctl daemon-reload
+
+    - name: run mysql
+      shell: systemctl start mysql.service 
+      

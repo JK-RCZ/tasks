@@ -1,0 +1,18 @@
+#[aws_server_1]
+#microcore1 ansible_host=54.87.174.23 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jankarczewski/projects/ansible/aws/jan-aws.pem ansible_python_interpreter=/usr/bin/python3.7
+
+#[aws_server_2]
+#microcore2 ansible_host=44.212.93.65 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jankarczewski/projects/ansible/aws/jan-aws.pem ansible_python_interpreter=/usr/bin/python3.7
+
+#[aws_server_3]
+#SUSE-Jenkins-Controller ansible_host=54.91.82.252 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jan/projects/ansible/aws/jan-aws.pem
+
+#[aws_server_4]
+#SUSE-Jenkins-Agent1 ansible_host=54.174.244.58 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jan/projects/ansible/aws/jan-aws.pem
+
+#[aws_server_5]
+#SUSE-Jenkins-Deploy-Staging ansible_host=44.202.118.87 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jan/projects/ansible/aws/jan-aws.pem
+
+[aws_server_6]
+SUSE-Jenkins-Deploy-Prod ansible_host=3.86.84.149 ansible_user=ec2-user ansible_ssh_private_key_file=/home/jan/projects/ansible/aws/jan-aws.pem
+

@@ -1,0 +1,27 @@
+---
+ - name: php installation
+   hosts: all
+   become: yes
+   tasks:
+    - name: install php
+      command: zypper install -y php8
+    - name: install php-fpm
+      command: zypper install -y php8-fpm
+    - name: copy modified php-fpm.conf
+      copy: 
+           src: /home/jan/projects/ansible/aws/SUSE/php-fpm.conf
+           dest: /etc/php8/fpm/php-fpm.conf
+    - name: copy modified www.conf
+      copy: 
+           src: /home/jan/projects/ansible/aws/SUSE/www.conf
+           dest: /etc/php8/fpm/php-fpm.d/www.conf
+    - name: copy index.php
+      copy: 
+           src: /home/jan/projects/ansible/aws/SUSE/index.php
+           dest: /srv/www/htdocs/index.php
+    - name: copy nginx.conf
+      copy: 
+           src: /home/jan/projects/ansible/aws/SUSE/nginx.conf
+           dest: /etc/nginx/nginx.conf
+    - name: restart php-fpm and nginx
+      command: systemctl restart php-fpm nginx  

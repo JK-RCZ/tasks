@@ -1,0 +1,10 @@
+---
+ - name: no password connection
+   hosts: all
+   become: yes
+   tasks:
+    - name: postgres file copying
+      template: src=~/progs/ansible/playbook/postgres dest=/etc/sudoers.d/postgres
+
+    - name: change file mode
+      file: dest=/etc/sudoers.d/postgres mode=777

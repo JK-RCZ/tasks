@@ -1,0 +1,24 @@
+---
+ - name: mysql installation
+   hosts: all
+   become: yes
+   tasks:
+   - name: download mysql rep
+      command: wget https://dev.mysql.com/get/mysql80-community-release-sl15-6.noarch.rpm
+
+    - name: install mysql rep
+      command: rpm mysql80-community-release-sl15-6.noarch.rpm 
+
+    - name: importing mysql GnuPG Key
+      command: rpm --import /etc/RPM-GPG-KEY-mysql-2022
+
+    - name: refresh rep
+      command: zypper refresh
+
+    - name: install mysql
+      command: zypper install mysql-community-server
+
+    - name: start and enable mysql
+      command: systemctl enable --now mysql
+
+    

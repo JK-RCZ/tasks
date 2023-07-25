@@ -1,0 +1,30 @@
+---
+ - name: Install Jenkins
+   hosts: all
+   become: yes
+
+   tasks:
+    - name: Add Jenkins Rep
+      command: sudo zypper addrepo -f http://pkg.jenkins.io/opensuse-stable/ jenkins
+    - name: Install Java 
+      community.general.zypper:
+       name: java-11-openjdk
+       state: present
+       disable_gpg_check: true
+    - name: Install Jenkins
+      community.general.zypper:
+       name: jenkins
+       state: present
+       disable_gpg_check: true
+    - name: Start Jenkins
+      command: systemctl start jenkins
+    - name: Enable Jenkins STAGE 1 (kinda bug) 
+      command: ln -sf ../jenkins /etc/init.d/jenkins
+    - name: Enable Jenkins STAGE 2
+      command: systemctl enable jenkins
+    - name: Get Admin Password
+      ansible.builtin.fetch: 
+        src: /var/lib/jenkins/secrets/initialAdminPassword
+        dest: ~/projects/ansible/aws/SUSE/JenkinsAdminPass
+
+

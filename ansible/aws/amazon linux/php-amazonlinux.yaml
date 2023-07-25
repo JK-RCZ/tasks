@@ -1,0 +1,38 @@
+---
+ - name: php installation
+   hosts: all
+   become: yes
+   tasks:
+    - name: install php
+      command: yum install -y php.x86_64
+#    - name: cp php.ini
+#      fetch: 
+#         src: /etc/php.ini 
+#         dest: /home/jan/projects/ansible/aws/
+#    - name: copy modified php.ini
+#      copy: 
+#           src: /home/jan/projects/ansible/aws/php.ini
+#           dest: /etc/php.ini
+    - name: install php-fpm.x86_64
+      command: yum install -y php-fpm.x86_64
+#    - name: copy modified www.conf 
+#      copy: 
+#           src: /home/jan/projects/ansible/aws/www.conf
+#           dest: /etc/php-fpm.d/www.conf
+    - name: start php-fpm
+      command: systemctl start php-fpm
+    - name: enable php-fpm
+      command: systemctl start enable php-fpm  
+    - name: copy modified nginx.conf 
+      copy: 
+           src: /home/jan/projects/ansible/aws/nginx.conf
+           dest: /etc/nginx/nginx.conf
+    - name: restart nginx
+      command: systemctl restart nginx
+    - name: delete index.html
+      command: rm /usr/share/nginx/html/index.html
+    - name: create index.php
+      command: echo "<?php phpinfo(); ?>" >> /usr/share/nginx/html/index.php
+
+
+
