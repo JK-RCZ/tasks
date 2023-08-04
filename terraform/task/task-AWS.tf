@@ -2,6 +2,47 @@ provider "aws" {
    region = "us-east-1"
 
 }
+variable "sudo_pass" {
+  type = string
+  description = "Sudo password for some file operations."
+
+  sensitive = true
+}
+variable "ssh_key_path" {
+  type = string
+  sensitive = false
+  default = "~/Keys-tokens-etc/"
+}
+variable "ssh_key_name" {
+  type = string
+  sensitive = false
+  default = "aws-key.pem"
+}
+variable "local_public_IP" {
+  type = string
+  sensitive = false
+  default = "0.0.0.0"
+}
+#------------------------------------------- NULL RESOURCE -----------------------------------------
+resource "null_resource" "set-permissions-666-to-ssh-key" {
+
+  provisioner "local-exec" {
+    command = <<EOT
+                touch ${var.ssh_key_path}${var.ssh_key_name}
+                echo ${var.sudo_pass} | sudo -S chmod 666 ${var.ssh_key_path}${var.ssh_key_name}
+              EOT
+  }
+}
+
+resource "null_resource" "get-local-public-ip" {
+
+  provisioner "local-exec" {
+    command = <<EOT
+                curl ipconfig.io > ${var.ssh_key_path}local-public.ip
+              EOT
+  }
+}
+
 #------------------------------------ CREATING VPC & THREE SUBNETS ---------------------------------
 resource "aws_vpc" "terra-task" {
   cidr_block       = "10.0.0.0/26"
@@ -49,6 +90,7 @@ resource "aws_security_group" "web-sg" {
   name        = "web-sg"
   description = "Allow SSH, HTTP, HTTPS inbound traffic/All outbound traffic"
   vpc_id      = aws_vpc.terra-task.id
+  
 
   ingress {
     description      = "SSH"
@@ -123,8 +165,14 @@ resource "aws_key_pair" "jan" {
   public_key = tls_private_key.task-key.public_key_openssh
   
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.task-key.private_key_pem}' > ~/Keys-tokens-etc/aws-key.pem"
+    command = "echo '${tls_private_key.task-key.private_key_pem}' > ${var.ssh_key_path}${var.ssh_key_name}"
   }
+  provisioner "local-exec" {
+    command = "chmod 400 ${var.ssh_key_path}${var.ssh_key_name}"
+  }
+  depends_on = [
+        null_resource.set-permissions-666-to-ssh-key
+  ]
 }
 
 #------------------------------------ CREATING INTERNET GATEWAY ---------------------------------
@@ -150,3 +198,23 @@ resource "aws_route_table_association" "terra-task-public1-association" {
   subnet_id      = aws_subnet.terra-task-public1.id
   route_table_id = aws_route_table.task-route-table.id
 }
+resource "aws_route_table_association" "terra-task-public2-association" {
+  subnet_id      = aws_subnet.terra-task-public2.id
+  route_table_id = aws_route_table.task-route-table.id
+}
+
+#-------------------------------------- OUTPUT EC2 IP's -----------------------------------
+output "Terra-SUSE1-public-IP" {
+  value = aws_instance.Terra-SUSE1.*.public_ip
+}
+output "Terra-SUSE2-public-IP" {
+  value = aws_instance.Terra-SUSE2.*.public_ip
+}
+output "SSH-key-path" {
+  value = var.ssh_key_path
+}
+output "Local-public-IP" {
+  value = file("${var.ssh_key_path}local-public.ip")
+}
+
+
