@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
 
-command -v nginx &> /dev/null
-if [ $? != 0 ]
+#command -v nginx &> /dev/null
+#if [ $? != 0 ]
+#
+#        then
+#            echo "installed"
+#        else  
+#            echo "not installed"
+#fi
 
-        then
-            echo "installed"
-        else  
-            echo "not installed"
+if command -v nginx &> /dev/null
+then
+    echo "nginx ON"
+    exit
+else
+    echo "nginx OFF"    
 fi
