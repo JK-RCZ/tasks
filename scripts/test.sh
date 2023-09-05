@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 
 
-#command -v nginx &> /dev/null
-#if [ $? != 0 ]
-#
-#        then
-#            echo "installed"
-#        else  
-#            echo "not installed"
-#fi
+function delnginx {
+    sudo systemctl stop nginx
+    sudo apt remove -y nginx
+    sudo apt autoremove -y
+    #sudo rm -r "$dvalue"
+}
 
-if command -v nginx &> /dev/null
-then
-    echo "nginx ON"
-    exit
-else
-    echo "nginx OFF"    
-fi
+delnginx
