@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
+if command -v mysql &> /dev/null
+        then # in case mysql is installed
+            echo "It's ON"
+        else
+            echo "It's OFF"
+fi
 
-function delnginx {
-    sudo systemctl stop nginx
-    sudo apt remove -y nginx
-    sudo apt autoremove -y
-    #sudo rm -r "$dvalue"
-}
 
-delnginx
