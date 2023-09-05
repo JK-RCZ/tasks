@@ -2,6 +2,61 @@
 
 # This script installs nginx and configures it with specified PORT and WORKING DIRECTORY
 
+function delnginx { # deletes nginx and working folder
+    sudo systemctl stop nginx
+    sudo apt remove -y nginx
+    sudo apt autoremove -y
+    sudo rm -r "$dvalue"
+}
+
+function createnginxconf { # creates nginx.conf file with parameters: port and root folder
+    #-------------------------------------------------NGINX CONFIG---------------------------------------------
+        echo "worker_processes  1;
+        events {
+            worker_connections  1024;
+            use epoll;
+        }
+        http {
+            include       mime.types;
+            default_type  application/octet-stream;
+            sendfile        on;
+            keepalive_timeout  65;
+            include conf.d/*.conf;
+            server {
+                listen       "$pvalue";
+                server_name  localhost;
+                location / {
+                    root   "$dvalue";
+                    index  index.html index.htm index.php;
+                }
+                error_page   500 502 503 504  /50x.html;
+                    location = /50x.html {
+                    root   "$dvalue";
+                }
+            }
+            include vhosts.d/*.conf;
+        }" > nginx.conf
+    #------------------------------------------END OF NGINX CONFIG----------------------------------
+}
+
+function installnginx { # installs nginx
+    sudo apt update -y
+    sudo apt install -y nginx
+    sudo systemctl start nginx
+    sudo systemctl enable nginx
+    sudo cp -r ./nginx.conf /etc/nginx/nginx.conf
+    sudo systemctl restart nginx
+    sudo mkdir -p "$dvalue"
+    sudo cp -r ./index.html "$dvalue"/index.html
+    exit
+}
+
+function rootcheck { # check if user is root
+    if [ "$(whoami)" != root ]; then
+        echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
+        exit
+    fi
+}
 
 # while loop to read flags and values
 while getopts 'hp:d:' FLAG; do
@@ -47,142 +102,21 @@ if command -v nginx &> /dev/null
             read -r value
             if [ "$value" == "n" ]; 
                 then # in case nginx is installed but user wants to update it not using parameters
-                    echo -e "Using Standart nginx.conf file"
-                    #root check
-                    if [ "$(whoami)" != root ]; then
-                        echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
-                        exit
-                    fi
-                    #-------------------------------------------------NGINX CONFIG---------------------------------------------
-                    echo "worker_processes  1;
-                    events {
-                        worker_connections  1024;
-                        use epoll;
-                    }
-                    http {
-                        include       mime.types;
-                        default_type  application/octet-stream;
-                        sendfile        on;
-                        keepalive_timeout  65;
-                        include conf.d/*.conf;
-                        server {
-                            listen       80;
-                            server_name  localhost;
-                            location / {
-                                root   /srv/www/htdocs/;
-                                index  index.html index.htm index.php;
-                            }
-                            error_page   500 502 503 504  /50x.html;
-                                location = /50x.html {
-                                root   /srv/www/htdocs/;
-                            }
-                        }
-                        include vhosts.d/*.conf;
-                    }" > nginx.conf
-                    #------------------------------------------END OF NGINX CONFIG----------------------------------
-                    sudo apt update -y
-                    sudo apt install -y nginx
-                    sudo systemctl start nginx
-                    sudo systemctl enable nginx
-                    sudo cp -r ./nginx.conf /etc/nginx/nginx.conf
-                    sudo systemctl restart nginx
-                    sudo mkdir -p /srv/www/htdocs/
-                    sudo cp -r ./index.html /srv/www/htdocs/index.html
-                    exit  
+                    rootcheck
+                    pvalue="80"
+                    dvalue="/srv/www/htdocs/"
+                    createnginxconf
+                    delnginx
+                    installnginx
                 else # in case nginx is installed but user wants to update it using parameters
-                     #root check
-                    if [ "$(whoami)" != root ]; then
-                        echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
-                        exit
-                    fi
-                    #-------------------------------------------------NGINX CONFIG---------------------------------------------
-                    echo "worker_processes  1;
-                    events {
-                        worker_connections  1024;
-                        use epoll;
-                    }
-                    http {
-                        include       mime.types;
-                        default_type  application/octet-stream;
-                        sendfile        on;
-                        keepalive_timeout  65;
-                        include conf.d/*.conf;
-                        server {
-                            listen       "$pvalue";
-                            server_name  localhost;
-                            location / {
-                                root   "$dvalue";
-                                index  index.html index.htm index.php;
-                            }
-                            error_page   500 502 503 504  /50x.html;
-                                location = /50x.html {
-                                root   "$dvalue";
-                            }
-                        }
-                        include vhosts.d/*.conf;
-                    }" > nginx.conf
-                    #------------------------------------------END OF NGINX CONFIG----------------------------------
-                    sudo apt update -y
-                    sudo apt install -y nginx
-                    sudo systemctl start nginx
-                    sudo systemctl enable nginx
-                    sudo cp -r ./nginx.conf /etc/nginx/nginx.conf
-                    sudo systemctl restart nginx
-                    sudo mkdir -p "$dvalue"
-                    sudo cp -r ./index.html "$dvalue"/index.html
-                    exit    
+                    rootcheck
+                    createnginxconf
+                    delnginx
+                    installnginx
+                      
             fi
-            
-
         else # in case nginx is not installed
-             #root check
-            if [ "$(whoami)" != root ]; then
-                echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
-                exit
-            fi
-            echo "not installed"
-            #-------------------------------------------------NGINX CONFIG---------------------------------------------
-            echo "worker_processes  1;
-            events {
-                worker_connections  1024;
-                use epoll;
-            }
-            http {
-                include       mime.types;
-                default_type  application/octet-stream;
-                sendfile        on;
-                keepalive_timeout  65;
-                include conf.d/*.conf;
-                server {
-                    listen       "$pvalue";
-                    server_name  localhost;
-                    location / {
-                        root   "$dvalue";
-                        index  index.html index.htm index.php;
-                    }
-                    error_page   500 502 503 504  /50x.html;
-                        location = /50x.html {
-                        root   "$dvalue";
-                    }
-                }
-                include vhosts.d/*.conf;
-            }" > nginx.conf
-            #------------------------------------------END OF NGINX CONFIG----------------------------------
-            sudo apt update -y
-            sudo apt install -y nginx
-            sudo systemctl start nginx
-            sudo systemctl enable nginx
-            sudo cp -r ./nginx.conf /etc/nginx/nginx.conf
-            sudo systemctl restart nginx
-            sudo mkdir -p "$dvalue"
-            sudo cp -r ./index.html "$dvalue"/index.html
-            exit
-            
+            rootcheck
+            createnginxconf
+            installnginx
 fi
-
-#----------------------------------DELETE NGINX---------------------------------------------------
-#sudo systemctl stop nginx
-#sudo apt remove -y nginx
-#sudo apt autoremove -y
-#sudo rm -r "$dvalue"
-#sudo rm -r /srv/www/htdocs/
