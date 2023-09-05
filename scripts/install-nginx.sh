@@ -51,7 +51,7 @@ function installnginx { # installs nginx
     exit
 }
 
-function rootcheck { # check if user is root
+function rootcheck { # checks if user is root
     if [ "$(whoami)" != root ]; then
         echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
         exit
