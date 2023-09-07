@@ -10,15 +10,15 @@ worker_processes  1;
             keepalive_timeout  65;
             include conf.d/*.conf;
             server {
-                listen           85;
+                listen           97;
                 server_name  localhost;
                 location / {
-                    root        /tmp/newsuper/;
+                    root        /push/it/up/;
                     index  index.html index.htm index.php;
                 }
                 error_page   500 502 503 504  /50x.html;
                     location = /50x.html {
-                    root        /tmp/newsuper/;
+                    root        /push/it/up/;
                 }
             }
             include vhosts.d/*.conf;
