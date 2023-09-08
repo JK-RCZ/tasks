@@ -1,1 +1,1 @@
-\/tmp\/newsuper\/
+\/var\/lib\/mysql

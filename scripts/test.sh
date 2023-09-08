@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-#awk  '{gsub("listen.\{2,\}$", "listen           95;")}{print $0}' inputfile.txt > output.txt
-echo "Type the path"
-read path
-echo "${path}" > 1.txt
-sed -i 's/\//\\\//g'  1.txt
-path=$(cat 1.txt)
-sed -i 's/listen[ ]\{2,\}[0-9]\{2,\}/listen           97/' inputfile.txt
-sed -i "s/root.\{2,\}$/root        "${path}";/" inputfile.txt
 
 
+
+uvalue="1"
+username="hoffmann"
+userpass="123"
+
+
+function createuser { # creates mysql user with password and database 
+    if [ "$uvalue" == 1 ]
+        then
+            mysql -uroot -e "CREATE DATABASE ${username}db /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+            mysql -uroot -e "CREATE USER ${username}@localhost IDENTIFIED BY '${userpass}';"
+            mysql -uroot -e "GRANT ALL PRIVILEGES ON ${username}db.* TO '${username}'@'localhost';"
+            mysql -uroot -e "FLUSH PRIVILEGES;"
+    fi
+}
+createuser

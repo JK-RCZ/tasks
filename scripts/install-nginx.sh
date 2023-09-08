@@ -9,8 +9,8 @@ function delnginx { # deletes nginx and working folder
 }
 
 function changenginxconf { # creates nginx.conf file with parameters: port and root folder
-    sed -i "s/listen[ ]\{2,\}[0-9]\{2,\}/listen           "${pvalue}"/" nginx.conf
-    sed -i "s/root.\{2,\}$/root        "${cvalue}";/" nginx.conf
+    sed -i "s/listen[ ]\{2,\}[0-9]\{2,\}/listen           ""${pvalue}""/" nginx.conf
+    sed -i "s/root.\{2,\}$/root        ""${cvalue}"";/" nginx.conf
 }
 
 function installnginx { # installs nginx
