@@ -18,7 +18,11 @@ function installmysql { # installs mysql
     apt install -y mysql-server
     mkdir -p "${dvalue}"
     chown mysql:mysql "${dvalue}"
-    cp -R -p /var/lib/mysql "${dvalue}"
+    if [ "${dvalue}" != "/var/lib/mysql" ] && [ "${dvalue}" != "/var/lib/mysql/" ]
+        then 
+            cp -a /var/lib/mysql/. "${dvalue}"
+        
+    fi
     systemctl start mysql.service
     systemctl enable mysql.service
 }
@@ -26,9 +30,19 @@ function installmysql { # installs mysql
 function changemysqlconfig { # creates mysql config with specified parameters
     systemctl stop mysql.service
     sed -i "s/datadir.\{2,\}$/datadir = ""${cvalue}""/" mysqld.cnf
+    sed -i "s/\# socket/socket/" mysqld.cnf
     cp -r ./mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+    if grep -wq "socket" mysql.cnf
+        then
+            :
+        else
+            echo -e "[client]\nsocket	= /var/run/mysqld/mysqld.sock" >> mysql.cnf
+    fi
+    cp -r ./mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
     systemctl start mysql.service
+    sleep 0.5
 }
+
 
 function changeapparmorconfig {
     systemctl stop apparmor.service
@@ -39,6 +53,7 @@ function changeapparmorconfig {
     sed -i """${linenumber}""s/.*/  ""${cvalue}""** rwk,/" usr.sbin.mysqld
     cp -r ./usr.sbin.mysqld /etc/apparmor.d/usr.sbin.mysqld
     systemctl start apparmor.service
+    sleep 0.5
 }
 
 function delmysql { # deletes mysql
@@ -47,10 +62,15 @@ function delmysql { # deletes mysql
     apt autoremove -y
 }
 
-#function createuser { 
-#    # IN PRODUCTION...
-#    fi
-#}
+function createuser { # creates mysql user with password and database 
+    if [ "$uvalue" == 1 ]
+        then
+            mysql -uroot -e "CREATE DATABASE ${username}-db /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+            mysql -uroot -e "CREATE USER ${username}@localhost IDENTIFIED BY '${userpass}';"
+            mysql -uroot -e "GRANT ALL PRIVILEGES ON ${username}db.* TO '${username}'@'localhost';"
+            mysql -uroot -e "FLUSH PRIVILEGES;"
+    fi
+}
 
 function askfornameandpassword { # asks for username and password
     if [ "$uvalue" == 1 ]
@@ -70,7 +90,7 @@ function mysqlinstalled { # assigns to variable 'mysqlstatus' '1' if mysql is in
 }
 
 function userdecision { # assigns to variable 'value' 'y' if user wants to update mysql using parameters, 'n' - if not
-    echo "Current"
+    echo -e "\nCurrent"
             mysql -V
             echo -e "Would you like to update it? y/n"
             read -r value
@@ -88,6 +108,7 @@ while getopts 'hd:s:u' FLAG; do
     case "$FLAG" in
         h)
             echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [value] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+            exit
         ;;
         d)
             dvalue="$OPTARG"
@@ -126,18 +147,19 @@ if [ ${mysqlstatus} == 1 ]
                 then # in case mysql is installed but user wants to update it not using parameters
                     delmysql
                     installmysql
-                    #createuser
+                    
                 else # in case mysql is installed but user wants to update it using parameters
-                    changemysqlconfig
-                    changeapparmorconfig
                     delmysql                    
                     installmysql
-                    #createuser
+                    changemysqlconfig
+                    changeapparmorconfig
+                    createuser
+                    
                       
             fi
         else # in case mysql is not installed
+            installmysql
             changemysqlconfig
             changeapparmorconfig
-            installmysql
-            #createuser
+            createuser
 fi

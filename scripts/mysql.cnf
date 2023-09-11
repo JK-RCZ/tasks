@@ -1,0 +1,9 @@
+#
+# The MySQL database client configuration file
+#
+# Ref to https://dev.mysql.com/doc/refman/en/mysql-command-options.html
+
+[mysql]
+
+[client]
+socket	= /var/run/mysqld/mysqld.sock
