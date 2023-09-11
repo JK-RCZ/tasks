@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# This script installs mysql and configures it with specified PARAMETERS
+
 function rootcheck { # checks if user is root
     if [ "$(whoami)" != root ]; then
         echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
@@ -18,7 +20,7 @@ function installmysql { # installs mysql
     apt install -y mysql-server
     mkdir -p "${dvalue}"
     chown mysql:mysql "${dvalue}"
-    if [ "${dvalue}" != "/var/lib/mysql" ] && [ "${dvalue}" != "/var/lib/mysql/" ]
+    if [ "${dvalue}" != "/var/lib/mysql" ] && [ "${dvalue}" != "/var/lib/mysql/" ] #checks if user entered default folder to avoid overwriting it
         then 
             cp -a /var/lib/mysql/. "${dvalue}"
         
@@ -27,7 +29,7 @@ function installmysql { # installs mysql
     systemctl enable mysql.service
 }
 
-function changemysqlconfig { # creates mysql config with specified parameters
+function changemysqlconfig { # changes mysql config with specified parameters
     systemctl stop mysql.service
     sed -i "s/datadir.\{2,\}$/datadir = ""${cvalue}""/" mysqld.cnf
     sed -i "s/\# socket/socket/" mysqld.cnf
@@ -44,7 +46,7 @@ function changemysqlconfig { # creates mysql config with specified parameters
 }
 
 
-function changeapparmorconfig {
+function changeapparmorconfig { # changes apparmor config with specified parameters
     systemctl stop apparmor.service
     linenumber=$(sed -n '/# Allow data dir access/{=;q;}' usr.sbin.mysqld)
     linenumber="$((linenumber+1))"
