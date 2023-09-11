@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
-
-cvalue="\/kkk\/mysql2\/"
-
-function changemysqlconfig { # creates mysql config with specified parameters
-    systemctl stop mysql.service
-    sed -i "s/datadir.\{2,\}$/datadir = ""${cvalue}""/" mysqld.cnf
-    sed -i "s/\# socket/socket/" mysqld.cnf
-    cp -r ./mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
-    if grep -wq "socket" mysql.cnf
+uvalue="1"
+function askfornameandpassword { # asks for username and password
+    if [ "$uvalue" == 1 ]
         then
-            :
-        else
-            echo -e "[client]\nsocket	= /var/run/mysqld/mysqld.sock" >> mysql.cnf
+            read -r -sp "Enter your mysql user name: "$'\n' username
+            read -r -sp "Enter your mysql password: " userpass
     fi
-    cp -r ./mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
-    systemctl start mysql.service
 }
-changemysqlconfig
+ 
+function createuser { # creates mysql user with password and database 
+    if [ "$uvalue" == 1 ]
+        then
+            mysql -uroot -e "CREATE DATABASE ${username}_db /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+            mysql -uroot -e "CREATE USER ${username}@localhost IDENTIFIED BY '${userpass}';"
+            mysql -uroot -e "GRANT ALL PRIVILEGES ON ${username}db.* TO '${username}'@'localhost';"
+            mysql -uroot -e "FLUSH PRIVILEGES;"
+            #mysql -uroot -e "CREATE TABLE movies(title VARCHAR(50) NOT NULL,genre VARCHAR(30) NOT NULL,director VARCHAR(60) NOT NULL,release_year INT NOT NULL,PRIMARY KEY(title));"
+
+    fi
+}
+askfornameandpassword
+createuser
+
+
+
+
