@@ -9,29 +9,17 @@ function rootcheck { # checks if user is root
     fi
 }
 
-function convertpath { # converting path to working directory to be compatible with sed command
-    echo "${dvalue}" > 1.txt
-    sed -i 's/\//\\\//g'  1.txt
-    cvalue=$(cat 1.txt)
-}
-
 function installmysql { # installs mysql
     apt update -y
     apt install -y mysql-server
-    mkdir -p "${dvalue}"
-    chown mysql:mysql "${dvalue}"
-    if [ "${dvalue}" != "/var/lib/mysql" ] && [ "${dvalue}" != "/var/lib/mysql/" ] #checks if user entered default folder to avoid overwriting it
-        then 
-            cp -a /var/lib/mysql/. "${dvalue}"
-        
-    fi
+    mkdir -p "${directory}"
+    chown mysql:mysql "${directory}"
     systemctl start mysql.service
     systemctl enable mysql.service
 }
 
 function changemysqlconfig { # changes mysql config with specified parameters
-    systemctl stop mysql.service
-    sed -i "s/datadir.\{2,\}$/datadir = ""${cvalue}""/" mysqld.cnf
+    sed -i "s|datadir.\{2,\}$|datadir = ""${directory}""|" mysqld.cnf
     sed -i "s/\# socket/socket/" mysqld.cnf
     cp -r ./mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
     if grep -wq "socket" mysql.cnf
@@ -41,31 +29,43 @@ function changemysqlconfig { # changes mysql config with specified parameters
             echo -e "[client]\nsocket	= /var/run/mysqld/mysqld.sock" >> mysql.cnf
     fi
     cp -r ./mysql.cnf /etc/mysql/mysql.conf.d/mysql.cnf
-    systemctl start mysql.service
-    sleep 0.5
+    systemctl restart mysql.service
+    
 }
 
 
 function changeapparmorconfig { # changes apparmor config with specified parameters
-    systemctl stop apparmor.service
     linenumber=$(sed -n '/# Allow data dir access/{=;q;}' usr.sbin.mysqld)
     linenumber="$((linenumber+1))"
-    sed -i """${linenumber}""s/.*/  ""${cvalue}"" r,/" usr.sbin.mysqld
+    sed -i """${linenumber}""s|.*|  ""${directory}"" r,|" usr.sbin.mysqld
     linenumber="$((linenumber+1))"
-    sed -i """${linenumber}""s/.*/  ""${cvalue}""** rwk,/" usr.sbin.mysqld
+    sed -i """${linenumber}""s|.*|  ""${directory}""** rwk,|" usr.sbin.mysqld
     cp -r ./usr.sbin.mysqld /etc/apparmor.d/usr.sbin.mysqld
-    systemctl start apparmor.service
-    sleep 0.5
+    systemctl restart apparmor.service
+    
+}
+
+function filldatabase { # fills mysql database with tables according to user demanded size 
+    if [ "$dbsize" == 1 ];
+        then
+            for (( i=1 ; i<=tablequantity ; i++ )); 
+            do
+                sed -i "s/DROP TABLE IF EXISTS.*$/DROP TABLE IF EXISTS ""${username}""_db.movie""${i}"";/" sample.movieDB.sql
+                sed -i "s/CREATE TABLE.*$/CREATE TABLE ""${username}""_db.movie""${i}"" (/" sample.movieDB.sql
+                sed -i "s/INSERT INTO.*$/INSERT INTO ""${username}""_db.movie""${i}"" (movie_id, title, budget, homepage, overview, popularity, release_date, revenue, runtime, movie_status, tagline, vote_average, vote_count)/" sample.movieDB.sql
+                mysql -uroot  """${username}"""_db < sample.movieDB.sql
+            done
+    fi
 }
 
 function delmysql { # deletes mysql
-    systemctl stop mysql-service
+    #systemctl stop mysql-service
     apt remove -y mysql-service
     apt autoremove -y
 }
 
 function createuser { # creates mysql user with password and database 
-    if [ "$uvalue" == 1 ]
+    if [ "$userdata" == 1 ]
         then
             mysql -uroot -e "CREATE DATABASE ${username}_db /*\!40100 DEFAULT CHARACTER SET utf8 */;"
             mysql -uroot -e "CREATE USER ${username}@localhost IDENTIFIED BY '${userpass}';"
@@ -74,11 +74,16 @@ function createuser { # creates mysql user with password and database
     fi
 }
 
-function askfornameandpassword { # asks for username and password
-    if [ "$uvalue" == 1 ]
+function askforuserdata { # asks for username, password, database size
+    if [ "$userdata" == 1 ]
         then
             read -r -sp "Enter your mysql user name: "$'\n' username
-            read -r -sp "Enter your mysql password: " userpass
+            read -r -sp "Enter your mysql password: "$'\n' userpass
+    fi
+    if [ "$dbsize" == 1 ]
+        then
+            read -r -p "Enter desired mysql database size (INTEGER ONLY!): "$'\n' dbsize_value
+            tablequantity="$((dbsize_value*2))" 
     fi
 }
 
@@ -106,25 +111,25 @@ function userdecision { # assigns to variable 'value' 'y' if user wants to updat
 } 
 
 # while loop to read flags and values
-while getopts 'hd:s:u' FLAG; do
+while getopts 'hd:su' FLAG; do
     case "$FLAG" in
         h)
-            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [value] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
             exit
         ;;
         d)
-            dvalue="$OPTARG"
+            directory="$OPTARG"
             
         ;;
         s)
-            svalue="$OPTARG"
+            dbsize="1"
             
         ;;
         u)
-            uvalue="1"
+            userdata="1"
         ;;
         ?)
-            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [value] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
             exit
         ;;
     esac
@@ -133,14 +138,14 @@ done
 # Condition for no flag was passed
 if [ $OPTIND == 1 ]; 
     then 
-        echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [value] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+        echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
         exit
 fi
 
 rootcheck
-askfornameandpassword 
+askforuserdata
 mysqlinstalled
-convertpath
+
 
 if [ ${mysqlstatus} == 1 ]
         then # in case mysql is installed
@@ -156,6 +161,7 @@ if [ ${mysqlstatus} == 1 ]
                     changemysqlconfig
                     changeapparmorconfig
                     createuser
+                    filldatabase
                     
                       
             fi
@@ -164,4 +170,5 @@ if [ ${mysqlstatus} == 1 ]
             changemysqlconfig
             changeapparmorconfig
             createuser
+            filldatabase
 fi
