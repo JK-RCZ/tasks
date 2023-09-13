@@ -2,14 +2,14 @@
 
 # This script installs mysql and configures it with specified PARAMETERS
 
-function rootcheck { # checks if user is root
+function root_check { # checks if user is root
     if [ "$(whoami)" != root ]; then
         echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
         exit
     fi
 }
 
-function installmysql { # installs mysql
+function install_mysql { # installs mysql
     apt update -y
     apt install -y mysql-server
     mkdir -p "${directory}"
@@ -18,7 +18,7 @@ function installmysql { # installs mysql
     systemctl enable mysql.service
 }
 
-function changemysqlconfig { # changes mysql config with specified parameters
+function change_mysql_config { # changes mysql config with specified parameters
     sed -i "s|datadir.\{2,\}$|datadir = ""${directory}""|" mysqld.cnf
     sed -i "s/\# socket/socket/" mysqld.cnf
     cp -r ./mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -33,69 +33,70 @@ function changemysqlconfig { # changes mysql config with specified parameters
     
 }
 
-function filldatabase { # fills mysql database with tables according to user demanded size 
-    if [ "$dbsize" == 1 ];
+function fill_database { # fills mysql database with tables according to user demanded size 
+    if [ "$db_size" == 1 ];
         then
-            for (( i=1 ; i<=tablequantity ; i++ )); 
+            for (( i=1 ; i<=table_quantity ; i++ )); 
             do
                 sed -i "s/DROP TABLE IF EXISTS.*$/DROP TABLE IF EXISTS ""${username}""_db.movie""${i}"";/" sample.movieDB.sql
                 sed -i "s/CREATE TABLE.*$/CREATE TABLE ""${username}""_db.movie""${i}"" (/" sample.movieDB.sql
                 sed -i "s/INSERT INTO.*$/INSERT INTO ""${username}""_db.movie""${i}"" (movie_id, title, budget, homepage, overview, popularity, release_date, revenue, runtime, movie_status, tagline, vote_average, vote_count)/" sample.movieDB.sql
-                mysql -uroot  """${username}"""_db < sample.movieDB.sql
+                cat sample.movieDB.sql >> movieDB.sql
             done
+            mysql -uroot  """${username}"""_db < movieDB.sql
+            rm movieDB.sql
     fi
 }
 
-function delmysql { # deletes mysql
-    #systemctl stop mysql-service
+function delete_mysql { # deletes mysql
     apt remove -y mysql-service
     apt autoremove -y
 }
 
-function createuser { # creates mysql user with password and database 
-    if [ "$userdata" == 1 ]
+function create_user { # creates mysql user with password and database 
+    if [ "$user_data" == 1 ]
         then
             mysql -uroot -e "CREATE DATABASE ${username}_db /*\!40100 DEFAULT CHARACTER SET utf8 */;"
             mysql -uroot -e "CREATE USER ${username}@localhost IDENTIFIED BY '${userpass}';"
-            mysql -uroot -e "GRANT ALL PRIVILEGES ON ${username}db.* TO '${username}'@'localhost';"
+            mysql -uroot -e "GRANT ALL PRIVILEGES ON ${username}_db.* TO '${username}'@'localhost';"
             mysql -uroot -e "FLUSH PRIVILEGES;"
     fi
 }
 
-function askforuserdata { # asks for username, password, database size
-    if [ "$userdata" == 1 ]
+function ask_for_user_data { # asks for username, password, database size
+    if [ "$user_data" == 1 ]
         then
             read -r -sp "Enter your mysql user name: "$'\n' username
             read -r -sp "Enter your mysql password: "$'\n' userpass
     fi
-    if [ "$dbsize" == 1 ]
+    if [ "$db_size" == 1 ]
         then
-            read -r -p "Enter desired mysql database size (INTEGER ONLY!): "$'\n' dbsize_value
-            tablequantity="$((dbsize_value*2))" 
+            read -r -p "Enter desired mysql database size (INTEGER ONLY!): "$'\n' db_size_value
+            table_quantity="$((db_size_value*2))" 
     fi
 }
 
-function mysqlinstalled { # assigns to variable 'mysqlstatus' '1' if mysql is installed, '0' - if not
+function mysql_installed { # assigns to variable 'mysql_status' '1' if mysql is installed, '0' - if not
     if command -v mysql &> /dev/null
         then 
-            mysqlstatus="1"
+            mysql_status="1"
         else
-            mysqlstatus="0"
+            mysql_status="0"
     fi
 }
 
-function userdecision { # assigns to variable 'value' 'y' if user wants to update mysql using parameters, 'n' - if not
+function user_decision { # assigns to variable 'value' 'y' if user wants to update mysql using parameters, 'n' - if not
     echo -e "\nCurrent"
             mysql -V
             echo -e "Would you like to update it? y/n"
-            read -r value
-            if [ "$value" == "n" ]; 
+            read -r user_decided
+            if [ "$user_decided" == "n" ]; 
                 then 
                     echo -e "Thank you for you time!"
                     exit
             fi
             echo -e "Would you like to update mysql configuration with parameters you have entered? y/n"
-            read -r value
+            read -r user_decided
 } 
 
 # while loop to read flags and values
@@ -110,11 +111,11 @@ while getopts 'hd:su' FLAG; do
             
         ;;
         s)
-            dbsize="1"
+            db_size="1"
             
         ;;
         u)
-            userdata="1"
+            user_data="1"
         ;;
         ?)
             echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
@@ -130,31 +131,31 @@ if [ $OPTIND == 1 ];
         exit
 fi
 
-rootcheck
-askforuserdata
-mysqlinstalled
+root_check
+ask_for_user_data
+mysql_installed
 
 
-if [ ${mysqlstatus} == 1 ]
+if [ ${mysql_status} == 1 ]
         then # in case mysql is installed
-            userdecision
-            if [ "$value" == "n" ]; 
+            user_decision
+            if [ "$user_decided" == "n" ]; 
                 then # in case mysql is installed but user wants to update it not using parameters
-                    delmysql
-                    installmysql
+                    delete_mysql
+                    install_mysql
                     
                 else # in case mysql is installed but user wants to update it using parameters
-                    delmysql                    
-                    installmysql
-                    changemysqlconfig
-                    createuser
-                    filldatabase
+                    delete_mysql                    
+                    install_mysql
+                    change_mysql_config
+                    create_user
+                    fill_database
                     
                       
             fi
         else # in case mysql is not installed
-            installmysql
-            changemysqlconfig
-            createuser
-            filldatabase
+            install_mysql
+            change_mysql_config
+            create_user
+            fill_database
 fi

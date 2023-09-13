@@ -2,62 +2,62 @@
 
 # This script installs nginx and configures it with specified PORT and WORKING DIRECTORY
 
-function delnginx { # deletes nginx and working folder
+function del_nginx { # deletes nginx and working folder
     systemctl stop nginx
     apt remove -y nginx
     apt autoremove -y
 }
 
-function changenginxconf { # creates nginx.conf file with parameters: port and root folder
-    sed -i "s/listen[ ]\{2,\}[0-9]\{2,\}/listen           ""${pvalue}""/" nginx.conf
-    sed -i "s/root.\{2,\}$/root        ""${cvalue}"";/" nginx.conf
+function change_nginx_conf { # creates nginx.conf file with parameters: port and root folder
+    sed -i "s/listen[ ]\{2,\}[0-9]\{2,\}/listen           ""${port}""/" nginx.conf
+    sed -i "s/root.\{2,\}$/root        ""${converted_path}"";/" nginx.conf
 }
 
-function installnginx { # installs nginx
+function install_nginx { # installs nginx
     apt update -y
     apt install -y nginx
     systemctl start nginx
     systemctl enable nginx
     cp -r ./nginx.conf /etc/nginx/nginx.conf
     systemctl restart nginx
-    mkdir -p "${dvalue}"
-    cp -r ./index.html "${dvalue}"/index.html
+    mkdir -p "${directory}"
+    cp -r ./index.html "${directory}"/index.html
 }
 
-function rootcheck { # checks if user is root
+function root_check { # checks if user is root
     if [ "$(whoami)" != root ]; then
         echo -e "\nSorry. You can run this script as root only. Try using sudo.\n"
         exit
     fi
 }
 
-function nginxinstalled { # assigns to variable 'nginxstatus' '1' if nginx is installed, '0' - if not
+function nginx_installed { # assigns to variable 'nginx_status' '1' if nginx is installed, '0' - if not
     if command -v nginx &> /dev/null
         then 
-            nginxstatus="1"
+            nginx_status="1"
         else
-            nginxstatus="0"
+            nginx_status="0"
     fi
 }
 
-function userdecision { # assigns to variable 'value' 'y' if user wants to update nginx using parameters, 'n' - if not
+function user_decision { # assigns to variable 'value' 'y' if user wants to update nginx using parameters, 'n' - if not
     echo "Current"
             nginx -v
             echo -e "Would you like to update it? y/n"
-            read -r value
-            if [ "$value" == "n" ]; 
+            read -r user_decided
+            if [ "$user_decided" == "n" ]; 
                 then 
                     echo -e "Thank you for you time!"
                     exit
             fi
             echo -e "Would you like to update nginx configuration with port and folder you have entered? y/n"
-            read -r value
+            read -r user_decided
 } 
 
-function convertpath { # converting path to working directory to be compatible with sed command
-    echo "${dvalue}" > 1.txt
+function convert_path { # converting path to working directory to be compatible with sed command
+    echo "${directory}" > 1.txt
     sed -i 's/\//\\\//g'  1.txt
-    cvalue=$(cat 1.txt)
+    converted_path=$(cat 1.txt)
 }
 
 # while loop to read flags and values
@@ -67,11 +67,11 @@ while getopts 'hp:d:' FLAG; do
             echo -e "\nScript usage: 'install-nginx.sh [-h] [-p] [value] [-d] [value]'\n-h - Help\n-p - Port destination\n-d - Working directory\n"
         ;;
         p)
-            pvalue="${OPTARG}"
+            port="${OPTARG}"
             
         ;;
         d)
-            dvalue="${OPTARG}"
+            directory="${OPTARG}"
             
         ;;
         ?)
@@ -88,24 +88,24 @@ if [ ${OPTIND} == 1 ];
         exit
 fi
 
-rootcheck
-nginxinstalled
-convertpath
+root_check
+nginx_installed
+convert_path
 
-if [ ${nginxstatus} == 1 ]
+if [ ${nginx_status} == 1 ]
         then # in case nginx is installed
-            userdecision
-            if [ "$value" == "n" ]; 
+            user_decision
+            if [ "$user_decided" == "n" ]; 
                 then # in case nginx is installed but user wants to update it not using parameters
-                    delnginx
-                    installnginx
+                    del_nginx
+                    install_nginx
                 else # in case nginx is installed but user wants to update it using parameters
-                    changenginxconf
-                    delnginx
-                    installnginx
+                    change_nginx_conf
+                    del_nginx
+                    install_nginx
                       
             fi
         else # in case nginx is not installed
-            changenginxconf
-            installnginx
+            change_nginx_conf
+            install_nginx
 fi
