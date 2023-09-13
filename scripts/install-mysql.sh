@@ -33,18 +33,6 @@ function changemysqlconfig { # changes mysql config with specified parameters
     
 }
 
-
-function changeapparmorconfig { # changes apparmor config with specified parameters
-    linenumber=$(sed -n '/# Allow data dir access/{=;q;}' usr.sbin.mysqld)
-    linenumber="$((linenumber+1))"
-    sed -i """${linenumber}""s|.*|  ""${directory}"" r,|" usr.sbin.mysqld
-    linenumber="$((linenumber+1))"
-    sed -i """${linenumber}""s|.*|  ""${directory}""** rwk,|" usr.sbin.mysqld
-    cp -r ./usr.sbin.mysqld /etc/apparmor.d/usr.sbin.mysqld
-    systemctl restart apparmor.service
-    
-}
-
 function filldatabase { # fills mysql database with tables according to user demanded size 
     if [ "$dbsize" == 1 ];
         then
@@ -159,7 +147,6 @@ if [ ${mysqlstatus} == 1 ]
                     delmysql                    
                     installmysql
                     changemysqlconfig
-                    changeapparmorconfig
                     createuser
                     filldatabase
                     
@@ -168,7 +155,6 @@ if [ ${mysqlstatus} == 1 ]
         else # in case mysql is not installed
             installmysql
             changemysqlconfig
-            changeapparmorconfig
             createuser
             filldatabase
 fi
