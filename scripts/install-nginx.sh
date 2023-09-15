@@ -22,6 +22,7 @@ function install_nginx { # installs nginx
     systemctl restart nginx
     mkdir -p "${directory}"
     cp -r ./index.html "${directory}"/index.html
+    chmod 644 "${directory}"/index.html
 }
 
 function root_check { # checks if user is root
