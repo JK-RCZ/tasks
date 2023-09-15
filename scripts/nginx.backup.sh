@@ -71,11 +71,11 @@ function delete_older_then_seven { # deletes files older then 7 days or if their
     
     find "${backup_path}" -type f -mtime +7 -name '*.gz' -execdir rm -- '{}' \; #deletes files older then 7 days
 
-    count_files="$(ls -l "${backup_path}"/*.gz | wc -l)" #counts files in folder
+    count_files="$(find "${backup_path}" -type f -name '*.gz' | wc -l)" #counts files in folder
     del_quantity="$((count_files-7))" # amount of files to delete
     if [ "${count_files}" -gt "7" ] # deletes files if their amount is more the 7
         then
-            for i in $(ls -l "${backup_path}"/*.gz | head -n "${del_quantity}")
+            for i in $(find "${backup_path}" -type f -name '*.gz' | sort -n | head -n "${del_quantity}")
             do
                     rm "${i}"
             done
