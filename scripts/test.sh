@@ -2,19 +2,18 @@
 
 
 
-function create_nginx_backup { # creates archive file with nginx config data
-    backup_path="$(cat "${script_folder}"/backup_path.txt)"
-    current_date=$(date +"%d-%m-%Y_%T" | awk -F: '{ print ($1)"h"($2)"m"($3)"s" }')
-    cd "${backup_path}" || exit
-    tar -czf nginx-config_"${current_date}".tar.gz --absolute-names /etc/nginx/ 
-       
+function delete_older_then_seven { # deletes files older then 7 days or if their amount is more the 7
+    del_time="$(cat "${script_folder}"/del.time.txt)"
+    find "${backup_path}" -type f -mtime +"${del_time}" -name '*.gz' -execdir rm -- '{}' \; #deletes files older then 7 days
+    
+    count_files="$(ls -l "${backup_path}"/*.gz | wc -l)"
+    if [ "${count_files}" -gt "7" ] # deletes files if their amount is more the 7
+        then
+            for i in $(ls -lt "${backup_path}"/*.gz | head -n 7)
+            do
+                    rm "${i}"
+            done
+    fi
 }
-function current_script_path { # checks path of current script
-    cd "$(dirname "$0")" || exit
-    script_folder="$(pwd)"
-    script_path="$(pwd)"/"$(basename "$0")"
 
-}
-
-current_script_path
-create_nginx_backup
+deltime=
