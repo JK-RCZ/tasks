@@ -65,7 +65,7 @@ function convert_path { # converting path to working directory to be compatible 
 while getopts 'hp:d:' FLAG; do
     case "${FLAG}" in
         h)
-            echo -e "\nScript usage: 'install-nginx.sh [-h] [-p] [value] [-d] [value]'\n-h - Help\n-p - Port destination\n-d - Working directory\n"
+            echo -e "\nScript usage: install-nginx.sh [-h] [-p] [value] [-d] [value]'\n-h - Help\n-p - Port destination\n-d - Working directory\n"
         ;;
         p)
             port="${OPTARG}"
@@ -76,7 +76,7 @@ while getopts 'hp:d:' FLAG; do
             
         ;;
         ?)
-            echo -e "\nScript usage: 'install-nginx.sh [-h] [-p] [value] [-d] [value]'\n-h - Help\n-p - Port destination\n-d - Working directory\n"
+            echo -e "\nScript usage: install-nginx.sh [-h] [-p] [value] [-d] [value]'\n-h - Help\n-p - Port destination\n-d - Working directory\n"
             exit
         ;;
     esac

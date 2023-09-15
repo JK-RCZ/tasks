@@ -118,7 +118,7 @@ while getopts 'hd:su' FLAG; do
             user_data="1"
         ;;
         ?)
-            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+            echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
             exit
         ;;
     esac
@@ -127,7 +127,7 @@ done
 # Condition for no flag was passed
 if [ $OPTIND == 1 ]; 
     then 
-        echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: 'install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
+        echo -e "\nYou should run this script with SUDO!.. and flags.\n\nScript usage: install-mysql.sh [-h] [-d] [value] [-s] [-u]\n-h - Help\n-d - Working directory\n-s - Size of DB in Mb\n-u - User name\n"
         exit
 fi
 
