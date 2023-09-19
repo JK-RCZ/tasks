@@ -16,21 +16,20 @@ function fill_index_html { #creates index.html page with nslookup output in it
         echo "${line}" >> index.html
     done < tmp.txt
     echo "<p><em>Thank you for using site.ip script!</em></p></body></html>" >> index.html
-    cp index.html /usr/local/apache2/htdocs/index.html
+    cp index.html /var/www/html/index.html
     rm index.html
 }
 
-
-if [ "${SITE}" != "0" ];
+if [ "${SITE}" != "0" ]; # checks if enviroment variable was entered
     then
         touch tmp.txt
         nslookup_output_to_file
         fill_index_html
         rm tmp.txt
-        echo -e "\nNow you can open your browser and call for 127.0.0.1 to see the results.\nPress ENTER to exit container, when you're ready."
-        read -r enter
+        echo -e "\nNow you can open your browser and call for 127.0.0.1 to see the results.\nStop container, when you're done."
+        apache2ctl -D FOREGROUND
     else
-        echo -e "\nPlease run command with -e flag like this:\nsudo docker run -e SITE=www.site.dom image_name\n"
+        echo -e "\nPlease run command with -e flag like this:\nsudo docker run -p 80:80 -e SITE=www.site.dom image_name\n"
         exit
 fi
 
