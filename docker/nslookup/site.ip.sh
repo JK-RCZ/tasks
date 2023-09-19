@@ -9,20 +9,20 @@ function nslookup_output_to_file { #writes nslookup output to temporary file
 }
 
 function fill_index_html { #creates index.html page with nslookup output in it
-    touch index.html
+    
     echo "<!DOCTYPE html><html><head><title>Information on site you requiered</title><style>body {width: 35em;margin: 0 auto;font-family: Tahoma, Verdana, Arial, sans-serif;}</style></head><body><h1>Information on site you requiered:</h1><br>" > index.html
     while read -r line; 
     do
         echo "${line}" >> index.html
     done < tmp.txt
     echo "<p><em>Thank you for using site.ip script!</em></p></body></html>" >> index.html
-    cp index.html /var/www/html/index.html
-    rm index.html
+    mv index.html /var/www/html/index.html
+    
 }
 
 if [ "${SITE}" != "0" ]; # checks if enviroment variable was entered
     then
-        touch tmp.txt
+       
         nslookup_output_to_file
         fill_index_html
         rm tmp.txt

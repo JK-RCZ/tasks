@@ -40,17 +40,8 @@ function create_nginx_backup { # creates archive file with nginx config data
 function ask_for_directory { # asks user for backup files directory and creates it
     echo -e "\nPlease enter the folder you would like to save nginx backups:"
     read -r backup_folder
-    if test -d "${backup_folder}";
-        then
-            chown -R "${user_name}":"${user_name}" "${backup_folder}"
-            touch backup_path.txt
-            echo "${backup_folder}" > backup_path.txt
-        else
-            mkdir "${backup_folder}"
-            chown -R "${user_name}":"${user_name}" "${backup_folder}"
-            touch backup_path.txt
-            echo "${backup_folder}" > backup_path.txt
-    fi
+    mkdir -p "${backup_folder}"
+    echo "${backup_folder}" > backup_path.txt
 }
 
 function test_or_not { # asks for testmode (backups created every minute)
@@ -60,7 +51,6 @@ function test_or_not { # asks for testmode (backups created every minute)
     if [ "${test_mode}" == "y" ];
         then
             cron_interval="* * * * *"
-            
         else
             cron_interval="1 1 * * 0-6"
             
@@ -69,18 +59,22 @@ function test_or_not { # asks for testmode (backups created every minute)
 
 function delete_older_then_seven { # deletes files older then 7 days or if their amount is more the 7
     
-    find "${backup_path}" -type f -mtime +7 -name '*.gz' -execdir rm -- '{}' \; #deletes files older then 7 days
+    find "${backup_path}" -type f -mtime +"${date_limit}" -name '*.gz' -delete #deletes files older then 7 days
 
-    count_files="$(find "${backup_path}" -type f -name '*.gz' | wc -l)" #counts files in folder
-    del_quantity="$((count_files-7))" # amount of files to delete
-    if [ "${count_files}" -gt "7" ] # deletes files if their amount is more the 7
+    del_quantity="(($(find "${backup_path}" -type f -name '*.gz' | wc -l)-"${file_limit}"))" # amount of files to delete
+    files_to_delete=$(find "${backup_path}" -type f -name '*.gz' -printf "%p %TY-%Tm-%Td %TH:%TM:%TS\n" | sort -t- -k2 | head -n "${del_quantity}")
+        
+    if [ "${del_quantity}" -gt "0" ] # deletes files if their amount is more the 7
         then
-            for i in $(find "${backup_path}" -type f -name '*.gz' | sort -n | head -n "${del_quantity}")
+            for i in "${files_to_delete}"
             do
                     rm "${i}"
             done
     fi
 }
+
+date_limit="7"
+file_limit="7"
 
 if [ -t 0 ]; # checks if script was launched by user or by daemon
     then # if user
