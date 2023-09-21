@@ -5,7 +5,6 @@ RUN apt-get update && apt-get install -y \
   apache2 \
   dnsutils
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-#EXPOSE 80
 ENTRYPOINT ["/kkk/site.ip.sh"]
 
 

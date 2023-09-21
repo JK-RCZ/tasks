@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+
+  apache-php:
+    build:
+      context: ./apache-php
+    container_name: "apache-php-webserver"
+    ports:
+      - "80:80"
+  
+  db:
+    image: mysql:latest
+    container_name: "mysql-server"
+    restart: always
+    environment:
+        MYSQL_DATABASE: lamp
+        MYSQL_USER: henry
+        MYSQL_PASSWORD: any
+        MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - "./db:/docker-entrypointdb.d"
+
+  #db:
+  #  image: yobasystems/alpine-mariadb:latest
+  #  container_name: "mariadb-server"
+  #  restart: always
+  #  environment:
+  #      MARIADB_DATABASE: lamp
+  #      MARIADB_USER: henry
+  #      MARIADB_PASSWORD: any
+  #      MARIADB_ALLOW_EMPTY_PASSWORD: 1
+  #  volumes:
+  #    - "./db:/docker-entrypointdb.d"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-server
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    
