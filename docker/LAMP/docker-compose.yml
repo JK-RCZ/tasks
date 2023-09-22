@@ -2,38 +2,33 @@ version: "3.8"
 
 services:
 
-  apache-php:
+  wordpress:
     build:
       context: ./apache-php
-    container_name: "apache-php-webserver"
+    container_name: "wordpress-webserver"
+    #volumes:
+    #  - "./site:/var/www/localhost/htdocs"
+    #  - "./site:/usr/local/apache2/htdocs"
     ports:
       - "80:80"
+    
   
   db:
-    image: mysql:latest
-    container_name: "mysql-server"
+    image: mariadb:latest
+    container_name: "mariadb-server"
     restart: always
     environment:
-        MYSQL_DATABASE: lamp
-        MYSQL_USER: henry
-        MYSQL_PASSWORD: any
-        MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        #MARIADB_DATABASE: lamp
+        MARIADB_USER: henry
+        MARIADB_PASSWORD: any
+        MARIADB_ALLOW_EMPTY_PASSWORD: 1
+        MARIADB_ROOT_PASSWORD: cool
     volumes:
-      - "./db:/docker-entrypointdb.d"
-
-  #db:
-  #  image: yobasystems/alpine-mariadb:latest
-  #  container_name: "mariadb-server"
-  #  restart: always
-  #  environment:
-  #      MARIADB_DATABASE: lamp
-  #      MARIADB_USER: henry
-  #      MARIADB_PASSWORD: any
-  #      MARIADB_ALLOW_EMPTY_PASSWORD: 1
-  #  volumes:
-  #    - "./db:/docker-entrypointdb.d"
+      - "./db:/var/lib/mysql"
+    
 
   phpmyadmin:
+    
     image: phpmyadmin:latest
     container_name: phpmyadmin-server
     ports:

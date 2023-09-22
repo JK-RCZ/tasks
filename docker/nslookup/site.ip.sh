@@ -11,7 +11,7 @@ function nslookup_output_to_file { #writes nslookup output to temporary file
 function fill_index_html { #creates index.html page with nslookup output in it
     
     echo "<!DOCTYPE html><html><head><title>Information on site you requiered</title><style>body {width: 35em;margin: 0 auto;font-family: Tahoma, Verdana, Arial, sans-serif;}</style></head><body><h1>Information on site you requiered:</h1><br>" > index.html
-    while read -r line; 
+    while read -r line; cp -a
     do
         echo "${line}" >> index.html
     done < tmp.txt
