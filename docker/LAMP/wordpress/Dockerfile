@@ -14,7 +14,8 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && rm /var/www/localhost/htdocs/index.html \
     && cp -a /usr/share/webapps/wordpress/. /var/www/localhost/htdocs/ \
     && chown -R apache:apache /var/www/localhost/htdocs/ \
-    && chmod 755 /var/www/localhost/htdocs/
+    && chmod 755 /var/www/localhost/htdocs/ \
+    && apk add redis
 RUN echo "ServerName localhost" >> /etc/apache2/httpd.conf
 CMD ["apachectl", "-D", "FOREGROUND"]
 
