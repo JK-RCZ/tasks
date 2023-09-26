@@ -4,9 +4,9 @@ services:
 
   wordpress:
 
-    #build:
-    #  context: ./wordpress
-    image: wordpress:6.3.1
+    build:
+      context: ./wordpress
+    #image: wordpress:6.3.1
     container_name: "wordpress-webserver"
     restart: always
     volumes:
