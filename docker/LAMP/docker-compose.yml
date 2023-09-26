@@ -4,12 +4,13 @@ services:
 
   wordpress:
 
-    build:
-      context: ./wordpress
+    #build:
+    #  context: ./wordpress
+    image: wordpress:6.3.1
     container_name: "wordpress-webserver"
     restart: always
     volumes:
-      - "/home/ykarchevsky/test/site:/var/www/localhost/htdocs"
+      - "/kkk/site:/var/www/localhost/htdocs"
     #  - "./site:/usr/local/apache2/htdocs"
     depends_on:
       - db
@@ -34,7 +35,7 @@ services:
         MARIADB_ALLOW_EMPTY_PASSWORD: 1
         MARIADB_ROOT_PASSWORD: cool
     volumes:
-      - "/home/ykarchevsky/test/db:/var/lib/mysql"
+      - "/kkk/db:/var/lib/mysql"
     
 
   phpmyadmin:
