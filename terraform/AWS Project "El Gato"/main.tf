@@ -2,7 +2,7 @@
 
 
 module "dev-environment" {
-  source = "../modules/net.sub.nat.igw"
+  source = "../modules/AWS.net.sub.nat.igw"
   vpc_parameters = {
     region = var.vpc_parameters.region
     vpc_cidr_block = var.vpc_parameters.vpc_cidr_block
