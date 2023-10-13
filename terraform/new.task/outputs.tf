@@ -1,4 +1,4 @@
-output "VPC_parameters" {
-    description = "VPC data"
-    value = module.dev-vpc
+output "Environment-parameters" {
+    description = "Environment data"
+    value = module.dev-environment
 }
