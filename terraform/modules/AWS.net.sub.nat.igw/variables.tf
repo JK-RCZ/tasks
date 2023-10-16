@@ -15,6 +15,7 @@ variable "vpc_parameters" {
       region = string
       vpc_cidr_block = string
       vpc_name_tag = string
+      internnet_gw_name_tag = string
       }
     )
 }

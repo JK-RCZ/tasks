@@ -2,6 +2,26 @@ provider "aws" {
    region = var.vpc_parameters.region
 
 }
+
+locals {
+  pub_subs = [
+    for i in range(length(var.subnets)):
+      var.subnets[i] if var.subnets[i].public == true
+  ]
+  priv_subs = [
+    for i in range(length(var.subnets)):
+      var.subnets[i] if var.subnets[i].public == false
+  ]
+  pub_sub_index = [
+    for i in range(length(var.subnets)):
+      i if var.subnets[i].public == true
+  ]
+
+  priv_sub_index = [
+    for i in range(length(var.subnets)):
+      i if var.subnets[i].public == false
+  ]
+}
 resource "aws_vpc" "major" {
   cidr_block                = var.vpc_parameters.vpc_cidr_block
   instance_tenancy          = "default"
@@ -20,98 +40,67 @@ resource "aws_subnet" "minor" {
   tags = merge(var.common_tags, {Name = "${var.subnets[count.index].name}"})
 }
 
-/*
-#------------------------------------ CREATING INTERNET GATEWAY ---------------------------------
-resource "aws_internet_gateway" "terra-dev-env-igw" {
-  vpc_id                    = aws_vpc.terra-dev-env-net.id
-  tags = {
-    Name                    = "terra-dev-env-igw"
-  }
+
+resource "aws_internet_gateway" "sky" {
+  vpc_id                    = aws_vpc.major.id
+  tags = merge(var.common_tags, {Name = "${var.vpc_parameters.internnet_gw_name_tag}"})
 }
 
-#--------------------------------------- CREATING ELASTIC IP'S ------------------------------------
-resource "aws_eip" "terra-env-dev-eli-1" {
+
+resource "aws_eip" "nose" {
+  count = length(local.pub_subs)
   domain                    = "vpc"
-  associate_with_private_ip = "10.0.0.0"
-  depends_on                = [aws_internet_gateway.terra-dev-env-igw]
-}
-resource "aws_eip" "terra-env-dev-eli-2" {
-  domain                    = "vpc"
-  associate_with_private_ip = "10.0.128.0"
-  depends_on                = [aws_internet_gateway.terra-dev-env-igw]
-}
-
-#------------------------------------------- CREATING NATS ----------------------------------------
-resource "aws_nat_gateway" "terra-env-dev-nat1" {
-  allocation_id             = aws_eip.terra-env-dev-eli-1.id
-  subnet_id                 = aws_subnet.terra-dev-env-public1-subnet.id
-
-  tags = {
-    Name = "terra-env-dev-nat1"
-  }
-  depends_on                = [aws_internet_gateway.terra-dev-env-igw]
-}
-resource "aws_nat_gateway" "terra-env-dev-nat2" {
-  allocation_id             = aws_eip.terra-env-dev-eli-2.id
-  subnet_id                 = aws_subnet.terra-dev-env-public2-subnet.id
-
-  tags = {
-    Name = "terra-env-dev-nat2"
-  }
-  depends_on                = [aws_internet_gateway.terra-dev-env-igw]
+  associate_with_private_ip = local.pub_subs[count.index].cidr_block 
+  depends_on                = [aws_internet_gateway.sky]
+  tags = merge(var.common_tags, {Name = "${local.pub_subs[count.index].name} Elastic IP"})
+  
 }
 
 
-#---------------------------------------- CREATING ROUTE TABLE -------------------------------------
-resource "aws_route_table" "terra-dev-env-public-route-table" {
-  vpc_id                    = aws_vpc.terra-dev-env-net.id
+resource "aws_nat_gateway" "one-way" {
+  count = length(local.pub_subs)
+  allocation_id             = aws_eip.nose[count.index].id
+  subnet_id                 = aws_subnet.minor[local.pub_sub_index[count.index]].id
+
+  tags = merge(var.common_tags, {Name = "${local.pub_subs[count.index].name} NAT"})
+  depends_on                = [aws_internet_gateway.sky]
+}
+
+
+
+resource "aws_route_table" "skynet" {
+  vpc_id                    = aws_vpc.major.id
   route {
     cidr_block              = "0.0.0.0/0"
-    gateway_id              = aws_internet_gateway.terra-dev-env-igw.id
+    gateway_id              = aws_internet_gateway.sky.id
   }
-  tags = {
-    Name                    = "task-route-table"
-  }
+  tags = merge(var.common_tags, {Name = "${var.vpc_parameters.vpc_name_tag} Route Table"})
+  depends_on                = [aws_internet_gateway.sky]
 }
 
-resource "aws_route_table" "terra-dev-env-private1-route-table" {
-  vpc_id                    = aws_vpc.terra-dev-env-net.id
+resource "aws_route_table" "skynet_private" {
+  count = length(local.pub_sub_index)
+  vpc_id                    = aws_vpc.major.id
   route {
     cidr_block              = "0.0.0.0/0"
-    nat_gateway_id          = aws_nat_gateway.terra-env-dev-nat1.id
+    nat_gateway_id          = aws_nat_gateway.one-way[count.index].id
   }
-  tags = {
-    Name                    = "terra-dev-env-private1-route-table"
-  }
+  tags = merge(var.common_tags, {Name = "${local.priv_subs[count.index].name} Route Table"})
+  depends_on                = [aws_internet_gateway.sky]
 }
 
-resource "aws_route_table" "terra-dev-env-private2-route-table" {
-  vpc_id                    = aws_vpc.terra-dev-env-net.id
-  route {
-    cidr_block              = "0.0.0.0/0"
-    nat_gateway_id          = aws_nat_gateway.terra-env-dev-nat2.id
-  }
-  tags = {
-    Name                    = "terra-dev-env-private2-route-table"
-  }
+resource "aws_route_table_association" "Cat-Skynet" {
+  count = length(local.pub_sub_index)
+  subnet_id = aws_subnet.minor[local.pub_sub_index[count.index]].id
+  route_table_id = aws_route_table.skynet.id
+}
+resource "aws_route_table_association" "Mouse-Skynet" {
+  count = length(local.priv_sub_index)
+  subnet_id = aws_subnet.minor[local.priv_sub_index[count.index]].id
+  route_table_id = aws_route_table.skynet_private[count.index].id
 }
 
-resource "aws_route_table_association" "terra-dev-env-private1-association" {
-  subnet_id                 = aws_subnet.terra-dev-env-private1-subnet.id
-  route_table_id            = aws_route_table.terra-dev-env-private1-route-table.id
-}
 
-resource "aws_route_table_association" "terra-dev-env-private2-association" {
-  subnet_id                 = aws_subnet.terra-dev-env-private2-subnet.id
-  route_table_id            = aws_route_table.terra-dev-env-private2-route-table.id
-}
 
-resource "aws_route_table_association" "terra-dev-env-public1-association" {
-  subnet_id                 = aws_subnet.terra-dev-env-public1-subnet.id
-  route_table_id            = aws_route_table.terra-dev-env-public-route-table.id
-}
-resource "aws_route_table_association" "terra-dev-env-public2-association" {
-  subnet_id                 = aws_subnet.terra-dev-env-public2-subnet.id
-  route_table_id            = aws_route_table.terra-dev-env-public-route-table.id
-}
-*/
+
+
