@@ -25,13 +25,20 @@ variable "common_tags" {
     type        = map
 }
 
-variable "subnets" {
+variable "private_subnets" {
     description = "list of subnets"
     type = list(object({
       name = string
-      public = bool
       cidr_block = string
       availability_zone = string
     }))
-  
+}
+
+variable "public_subnets" {
+    description = "list of subnets"
+    type = list(object({
+      name = string
+      cidr_block = string
+      availability_zone = string
+    }))
 }

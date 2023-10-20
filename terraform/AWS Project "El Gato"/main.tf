@@ -10,7 +10,8 @@ module "dev-environment" {
     internnet_gw_name_tag = var.vpc_parameters.internnet_gw_name_tag
   }
   common_tags = var.common_tags
-  subnets = var.subnets
+  private_subnets = var.private_subnets
+  public_subnets = var.public_subnets
 }
 
   

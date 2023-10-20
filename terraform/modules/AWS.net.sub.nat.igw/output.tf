@@ -12,16 +12,31 @@ output "VPC-Data" {
   
 }
 
-output "Subnet-Data" {
+output "Private-Subnet-Data" {
     description = "Subnet main data"
     value = [
-        for i in range(length(var.subnets)):
+        for i in range(length(var.private_subnets)):
             [
                 {
-                    Name = aws_subnet.minor[i].tags.Name,
-                    Availability-zone = aws_subnet.minor[i].availability_zone,
-                    CIDR-block = aws_subnet.minor[i].cidr_block,
-                    ID = aws_subnet.minor[i].id
+                    Name = aws_subnet.minor_private[i].tags.Name,
+                    Availability-zone = aws_subnet.minor_private[i].availability_zone,
+                    CIDR-block = aws_subnet.minor_private[i].cidr_block,
+                    ID = aws_subnet.minor_private[i].id
+                }
+            ]
+    ]
+}
+
+output "Public-Subnet-Data" {
+    description = "Subnet main data"
+    value = [
+        for i in range(length(var.public_subnets)):
+            [
+                {
+                    Name = aws_subnet.minor_public[i].tags.Name,
+                    Availability-zone = aws_subnet.minor_public[i].availability_zone,
+                    CIDR-block = aws_subnet.minor_public[i].cidr_block,
+                    ID = aws_subnet.minor_public[i].id
                 }
             ]
     ]
@@ -41,7 +56,7 @@ output "Internet-Gateway-Data" {
 output "Elastic-IPs-Data" {
    description = "Elastic IP main data"
     value = [
-        for i in range(length(local.pub_subs)):
+        for i in range(length(var.private_subnets)):
             [
                 {
                     Name = aws_eip.nose[i].tags.Name,
@@ -57,7 +72,7 @@ output "Elastic-IPs-Data" {
 output "NAT-Data" {
    description = "NAT main data"
     value = [
-        for i in range(length(local.pub_subs)):
+        for i in range(length(var.private_subnets)):
             [
                 {
                     Name = aws_nat_gateway.one-way[i].tags.Name,
@@ -73,7 +88,7 @@ output "NAT-Data" {
 output "Private-Route-Table-Data" {
    description = "Private Route table main data"
     value = [
-        for i in range(length(local.pub_subs)):
+        for i in range(length(var.private_subnets)):
             [
                 {
                     Name = aws_route_table.skynet_private[i].tags.Name,

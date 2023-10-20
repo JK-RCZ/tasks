@@ -11,7 +11,7 @@ common_tags = {
     Project = "El Gato"
 }
 
-subnets = [
+private_subnets = [
     {
     name = "Private Mouse 1"
     public = "false"
@@ -23,7 +23,10 @@ subnets = [
     public = "false"
     cidr_block = "10.0.64.0/18"
     availability_zone = "eu-west-2b"
-    },
+    }
+]
+
+public_subnets = [ 
     {
     name = "Public Mouse 1"
     public = "true"
