@@ -1,12 +1,3 @@
-/*variable "region" {
-    description = "AWS region"
-}
-variable "vpc_cidr_block" {
-    description = "CIDR block for VPC"
-}
-variable "vpc_name_tag" {
-    description = "Specific VPC tag"
-}*/
 
 variable "vpc_parameters" {
     description = "Variables for VPC"
@@ -41,4 +32,27 @@ variable "public_subnets" {
       cidr_block = string
       availability_zone = string
     }))
+}
+
+variable "ssh_key" {
+    description = "SSH key options"
+    type = object({
+      name = string
+      contents = string
+    })
+  
+}
+
+variable "security_group" {
+    description = "Ingress ports for EC2"
+    type = list(string)
+}
+variable "aws_instance" {
+    description = "Instances to create"
+    type = list(object({
+      name = string
+      ami = string
+      instance_type = string
+      user_data_path = string
+      }))
 }

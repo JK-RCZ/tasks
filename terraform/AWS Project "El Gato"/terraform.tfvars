@@ -40,3 +40,18 @@ public_subnets = [
     availability_zone = "eu-west-2b"
     }
 ]
+
+ssh_key = {
+  name = "jan2"
+  contents = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCGxBdCOoCWhvgw75SKLoHIU5jnhAb+2Wdp6SBdKNZY/2M+mMt+VvLS8mXq07x+7GjYiA/iNpoA+tWWYB4yrWiX7vnAksZBaaU4q07dbcrV+i2FX6XR7lAgI8llq9qc9xcacgZxe6g14uFViJwVtsId+geUOZDRYcy4zfO0aSMXEPGaEAeo0aeFKKojP+LeRRuh0/rQj2fNjgxZL8AKdiZrDy30S6XIlj9ZutCvufa/2Z1GRjcHEHUml8Ylsyr2886q9CjTS/cQbqd2PfqcgqTA4B9ntO6en3ZgHhufr/zD3ZVNOABkuA8fDs6DwNFJ9rHBc5B7/mbnWL+PtYIfvRCN"
+}
+
+security_group = [ "22", "80" ]
+
+aws_instance = [ {
+  name = "in1"
+  ami = "ami-029b760a1ef7c0528"
+  instance_type = "t2.micro"
+  user_data_path = "install-LAMP.sh"
+} ]
+

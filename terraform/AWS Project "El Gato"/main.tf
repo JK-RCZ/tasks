@@ -12,6 +12,9 @@ module "dev-environment" {
   common_tags = var.common_tags
   private_subnets = var.private_subnets
   public_subnets = var.public_subnets
+  ssh_key = var.ssh_key
+  security_group = var.security_group
+  aws_instance = var.aws_instance
 }
 
   

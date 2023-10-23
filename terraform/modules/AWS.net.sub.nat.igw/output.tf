@@ -108,3 +108,28 @@ output "Public-Route-Table-Data" {
         }
     ]
 }
+
+output "Security-Group-Data" {
+    description = "Security group main data"
+    value = [{
+        Name = aws_security_group.dog.tags.Name
+        ID = aws_security_group.dog.id
+
+    }]
+}
+
+output "Instance_Data" {
+    description = "Instance main data"
+    value = [
+        for i in range(length(var.aws_instance)):
+            [
+                {
+                    Name = aws_instance.entity[i].tags.Name,
+                    ID = aws_instance.entity[i].id
+                    Public_IP = aws_instance.entity[i].public_ip
+                    Subnet_id = aws_instance.entity[i].subnet_id
+                }
+            ]
+    ]
+  
+}
