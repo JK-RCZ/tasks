@@ -7,5 +7,4 @@ sudo zypper install -y docker-compose
 sudo systemctl start docker
 git clone https://github.com/JK-RCZ/tasks.git
 cd /tasks/docker/LAMP/
-touch gogi.txt
 sudo docker-compose up -d
