@@ -10,7 +10,8 @@ services:
     container_name: "wordpress-webserver"
     restart: always
     volumes:
-    #  - "/kkk/site:/var/www/localhost/htdocs"
+      - "/kkk/site:/var/www/localhost/htdocs"
+    # - "/kkk/site:/kkk/site"
     #  - "./site:/usr/local/apache2/htdocs"
     depends_on:
       - db

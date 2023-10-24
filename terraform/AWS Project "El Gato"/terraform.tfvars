@@ -48,10 +48,12 @@ ssh_key = {
 
 security_group = [ "22", "80" ]
 
-aws_instance = [ {
+aws_instance =  {
   name = "in1"
   ami = "ami-029b760a1ef7c0528"
   instance_type = "t2.micro"
   user_data_path = "install-LAMP.sh"
-} ]
+}
 
+vpc_name = "Cat"
+subnet_name = "Public Mouse 1"

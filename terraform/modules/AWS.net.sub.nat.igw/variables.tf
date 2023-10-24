@@ -33,26 +33,3 @@ variable "public_subnets" {
       availability_zone = string
     }))
 }
-
-variable "ssh_key" {
-    description = "SSH key options"
-    type = object({
-      name = string
-      contents = string
-    })
-  
-}
-
-variable "security_group" {
-    description = "Ingress ports for EC2"
-    type = list(string)
-}
-variable "aws_instance" {
-    description = "Instances to create"
-    type = list(object({
-      name = string
-      ami = string
-      instance_type = string
-      user_data_path = string
-      }))
-}

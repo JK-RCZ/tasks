@@ -46,13 +46,25 @@ variable "ssh_key" {
 variable "security_group" {
     description = "Ingress ports for EC2"
     type = list(string)
+    
 }
+variable "vpc_name" {
+  description = "VPC name to stick security group to"
+  type = string  
+}
+
+variable "subnet_name" {
+    description = "Subnet name to stick instance to"
+    type = string
+}
+
 variable "aws_instance" {
     description = "Instances to create"
-    type = list(object({
+    type = object({
       name = string
       ami = string
       instance_type = string
       user_data_path = string
-      }))
+    })
 }
+

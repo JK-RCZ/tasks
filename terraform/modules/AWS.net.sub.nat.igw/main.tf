@@ -93,50 +93,6 @@ resource "aws_route_table_association" "Mouse-Skynet" {
 
 
 
-resource "aws_key_pair" "ssh" {
-  key_name   = var.ssh_key.name
-  public_key = var.ssh_key.contents
-}
-
-resource "aws_security_group" "dog" {
-  description = "Allow inbound/outbound traffic"
-  vpc_id      = aws_vpc.major.id
-    
-  dynamic "ingress" {
-    for_each = toset(var.security_group)
-    content {
-      from_port        = ingress.value
-      to_port          = ingress.value
-      protocol         = "tcp"
-      cidr_blocks      = ["0.0.0.0/0"]
-    }
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  tags = merge(var.common_tags, {Name = "Straight Security"})
-
-  
-}
-
-resource "aws_instance" "entity" {
-  count = length(var.aws_instance)
-  ami = var.aws_instance[count.index].ami
-  instance_type = var.aws_instance[count.index].instance_type
-  subnet_id = aws_subnet.minor_public[count.index].id
-  associate_public_ip_address = "true"
-  vpc_security_group_ids = [aws_security_group.dog.id]
-  key_name = aws_key_pair.ssh.key_name
-  tags = merge(var.common_tags, {Name = "${var.aws_instance[count.index].name}"})
-  user_data = file(var.aws_instance.user_data_path)
-}
-
-
 
 
 
