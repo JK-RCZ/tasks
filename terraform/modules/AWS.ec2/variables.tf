@@ -3,13 +3,9 @@ variable "common_tags" {
     type        = map
 }
 
-variable "ssh_key" {
-    description = "SSH key options"
-    type = object({
-      name = string
-      contents = string
-    })
-  
+variable "public-key" {
+    description = "Public key to access instance"
+    type =  string
 }
 
 variable "security_group" {
@@ -27,10 +23,16 @@ variable "subnet_id" {
     type = string
 }
 
+variable "public_subnets_ids" {
+    description = "Public subnets ID's to stick load balancer to if chosen 'associate_public_ip_address = false'"
+    type = list(string)
+}
+
 variable "aws_instance" {
     description = "Instance to create"
     type = object({
       name = string
+      associate_public_ip_address = bool
       ami = string
       instance_type = string
       user_data_path = string

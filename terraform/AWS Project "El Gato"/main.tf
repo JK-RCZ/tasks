@@ -1,5 +1,9 @@
-
-
+locals {
+  pub_subs = [
+    for i in var.public_subnets_ids:
+      data.aws_subnet.public_subnets[i].id 
+  ]
+}
 
 module "dev-environment-net" {
   source = "../modules/AWS.net.sub.nat.igw"
@@ -24,6 +28,17 @@ data "aws_subnet" "subnet" {
  
 }
 
+data "aws_subnet" "public_subnets" {
+  for_each = toset(var.public_subnets_ids)
+  tags = {
+    
+    Name = each.key
+  }
+  
+  depends_on = [ module.dev-environment-net ]
+ 
+}
+
 data "aws_vpc" "vpc" {
   
   tags = {
@@ -36,9 +51,10 @@ data "aws_vpc" "vpc" {
 module "dev-environment-instance" {
   source = "../modules/AWS.ec2"
   common_tags = var.common_tags
-  ssh_key = var.ssh_key
+  public-key = var.public_key
   security_group = var.security_group
   aws_instance = var.aws_instance
   subnet_id = data.aws_subnet.subnet.id
   vpc_id = data.aws_vpc.vpc.id
+  public_subnets_ids = local.pub_subs
 }

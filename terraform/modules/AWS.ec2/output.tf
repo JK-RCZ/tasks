@@ -8,7 +8,7 @@ output "Security-Group-Data" {
     }]
 }
 
-output "Instance_Data" {
+output "Instance-Data" {
     description = "Instance main data"
     value =     {
                     Name = aws_instance.entity.tags.Name,
@@ -19,4 +19,13 @@ output "Instance_Data" {
             
     
   
+}
+
+output "Load-Balancer-Data" {
+   description = "Load balancer main data"
+    value = var.aws_instance.associate_public_ip_address ? null : {
+        Name = aws_lb.multi-pulti[0].name,
+        DNS_name = aws_lb.multi-pulti[0].dns_name,
+        ID = aws_lb.multi-pulti[0].id
+    }
 }
