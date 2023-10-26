@@ -45,13 +45,13 @@ public_subnets = [
 security_group = [ "22", "80" ]
 
 vpc_name = "Cat"
-subnet_name = "Public Mouse 1"
+subnet_name = "Private Mouse 1"
 public_subnets_ids = ["Public Mouse 1", "Public Mouse 2"]
 
 aws_instance =  {
   name = "in1"
   associate_public_ip_address = "false"
-  ami = "ami-029b760a1ef7c0528"
+  ami =  "ami-0b6384181e01b87fb" # Amazon  # SUSE "ami-029b760a1ef7c0528"
   instance_type = "t2.micro"
   user_data_path = "install-LAMP.sh"
 }

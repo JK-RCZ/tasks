@@ -72,6 +72,7 @@ resource "aws_lb_target_group_attachment" "test" {
   target_id        = aws_instance.entity.id
   port             = 80
   
+  
 }
 
 resource "aws_lb_listener" "target-locked_multi-pulti" {

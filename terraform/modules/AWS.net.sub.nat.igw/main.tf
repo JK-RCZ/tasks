@@ -51,7 +51,7 @@ resource "aws_eip" "nose" {
 resource "aws_nat_gateway" "one-way" {
   count = length(var.private_subnets)
   allocation_id             = aws_eip.nose[count.index].id
-  subnet_id                 = aws_subnet.minor_private[count.index].id
+  subnet_id                 = aws_subnet.minor_public[count.index].id
 
   tags = merge(var.common_tags, {Name = "${var.private_subnets[count.index].name} NAT"})
   depends_on                = [aws_internet_gateway.sky]
