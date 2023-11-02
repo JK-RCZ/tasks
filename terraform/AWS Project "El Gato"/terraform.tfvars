@@ -7,8 +7,10 @@ vpc_parameters = {
 }
 
 common_tags = {
-    Environment = "Dev"
+    Owner = "Jan Karczewski"
     Project = "El Gato"
+    Environment = "Dev"
+       
 }
 
 private_subnets = [
@@ -41,18 +43,41 @@ public_subnets = [
     }
 ]
 
-
-security_group = [ "22", "80" ]
+security_group ={
+  name = "Serious Security"
+  ports = [ "22", "80" ]
+} 
 
 vpc_name = "Cat"
 subnet_name = "Private Mouse 1"
 public_subnets_ids = ["Public Mouse 1", "Public Mouse 2"]
+private_subnets_ids = [ "Private Mouse 1", "Private Mouse 2" ]
 
 aws_instance =  {
   name = "in1"
   associate_public_ip_address = "false"
-  ami =  "ami-0b6384181e01b87fb" # Amazon  # SUSE "ami-029b760a1ef7c0528"
+  ami =  "ami-0b6384181e01b87fb" # Amazon-Linux
   instance_type = "t2.micro"
   user_data_path = "install-LAMP.sh"
 }
+
+
+db-parameter-group = "mariadb10.6"
+
+
+rds_instance = {
+  rds_instance_name    = "test-3-db"
+  allocated_storage    = "20"
+  storage_type         = "gp2"
+  db_name              = "wordpress"
+  engine               = "mariadb"
+  engine_version       = "10.6.14"
+  instance_class       = "db.t3.micro"
+  username             = "henry"
+  password             = "any12345"
+  parameter_group_name = "mariadb-10.6.14"
+  skip_final_snapshot  = "true"
+  publicly_accessible  = "false"
+}
+
 

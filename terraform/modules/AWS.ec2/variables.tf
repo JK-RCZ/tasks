@@ -10,7 +10,10 @@ variable "public-key" {
 
 variable "security_group" {
     description = "Ingress ports for EC2"
-    type = list(string)
+    type = object({
+      name = string
+      ports = list(string)
+    })
 }
 
 variable "vpc_id" {
@@ -36,6 +39,35 @@ variable "aws_instance" {
       ami = string
       instance_type = string
       user_data_path = string
-      
     })
 }
+
+variable "subnet_ids" {
+    description = "Subnets for DB subnets group"
+    type        = list(string)
+    
+}
+
+variable "db-parameter-group" {
+    description = "Options for DB parameter group"
+    type = string
+}
+
+variable "rds_instance" {
+    description = "Rds to create"
+    type = object({
+        rds_instance_name    = string
+        allocated_storage    = string
+        storage_type         = string
+        db_name              = string
+        engine               = string
+        engine_version       = string
+        instance_class       = string
+        username             = string
+        password             = string
+        skip_final_snapshot  = string
+        publicly_accessible  = bool
+        
+    })
+}
+
