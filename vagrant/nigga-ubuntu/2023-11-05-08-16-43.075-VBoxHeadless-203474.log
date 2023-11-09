@@ -1,0 +1,12 @@
+Log created: 2023-11-05T08:16:43.757485000Z
+Process ID:  203474 (0x31ad2)
+Parent PID:  3330 (0xd02)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: nigga-ubuntu_mysql_1699107534277_13200
+Arg[3]: --startvm
+Arg[4]: 152ca6b7-29ea-4b83-a86d-e53c5214171c
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

@@ -39,14 +39,14 @@ resource "aws_security_group" "rds-ec2" {
     from_port              = 3306
     to_port                = 3306
     protocol               = "tcp"
-    cidr_blocks            = ["0.0.0.0/0"]
+    cidr_blocks            = []
     ipv6_cidr_blocks       = []
     prefix_list_ids        = []
     self                   = "false"
     security_groups        = [aws_security_group.dog.id]
   }]
   egress                   = []
-  tags                     = var.common_tags
+  tags                     = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name}"})
 }
 
 resource "aws_instance" "entity" {
@@ -110,34 +110,46 @@ resource "aws_db_subnet_group" "lamp-db" {
   name = var.rds_instance.rds_instance_name
   subnet_ids = var.subnet_ids
 
-  tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name}"})
+  tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name} subnet group"})
 }
 
 resource "aws_db_parameter_group" "lamp-db" {
   family = var.db-parameter-group
-  tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name}"})
+  tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name} parameter group"})
 
-  #parameter {
-  #  name  = "log_connections"
-  #  value = "1"
-  #}
+  
+}
+
+resource "random_string" "password-generator-for-rds" {
+  length = 8
+  special = false
+  
+}
+
+resource "aws_ssm_parameter" "ssm-rds-password" {
+  name = "${var.rds_instance.rds_instance_name}-password" 
+  description = ""
+  type = "SecureString"
+  value = random_string.password-generator-for-rds.result
+  tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name}"})
 }
 
 resource "aws_db_instance" "lamp-db" {
-  allocated_storage    = var.rds_instance.allocated_storage
-  storage_type         = var.rds_instance.storage_type
-  db_name              = var.rds_instance.db_name
-  engine               = var.rds_instance.engine
-  engine_version       = var.rds_instance.engine_version
-  instance_class       = var.rds_instance.instance_class
-  username             = var.rds_instance.username
-  password             = var.rds_instance.password
-  parameter_group_name = aws_db_parameter_group.lamp-db.name
-  skip_final_snapshot  = var.rds_instance.skip_final_snapshot
+  identifier             = var.rds_instance.rds_instance_name
+  allocated_storage      = var.rds_instance.allocated_storage
+  storage_type           = var.rds_instance.storage_type
+  db_name                = var.rds_instance.db_name
+  engine                 = var.rds_instance.engine
+  engine_version         = var.rds_instance.engine_version
+  instance_class         = var.rds_instance.instance_class
+  username               = var.rds_instance.username
+  password               = aws_ssm_parameter.ssm-rds-password.value
+  parameter_group_name   = aws_db_parameter_group.lamp-db.name
+  skip_final_snapshot    = var.rds_instance.skip_final_snapshot
   db_subnet_group_name   = aws_db_subnet_group.lamp-db.name
   vpc_security_group_ids = [aws_security_group.rds-ec2.id] 
   publicly_accessible    = var.rds_instance.publicly_accessible
-  
+  depends_on             = [ aws_ssm_parameter.ssm-rds-password ]
 
   tags = merge(var.common_tags, {Name = "${var.rds_instance.rds_instance_name}"})
 }

@@ -14,7 +14,7 @@ services:
     # - "/kkk/site:/kkk/site"
     #  - "./site:/usr/local/apache2/htdocs"
     depends_on:
-      #- db
+      - db
       - cache
     environment:
       REDIS_HOST: cache
@@ -25,19 +25,19 @@ services:
       
     
   
-#  db:
-#
-#    image: mariadb:latest
-#    container_name: "mariadb-server"
-#    restart: always
-#    environment:
-#        MARIADB_DATABASE: wordpress
-#        MARIADB_USER: henry
-#        MARIADB_PASSWORD: any
-#        MARIADB_ALLOW_EMPTY_PASSWORD: 1
-#        MARIADB_ROOT_PASSWORD: cool
-#    volumes:
-#      - "/kkk/db:/var/lib/mysql"
+  db:
+
+    image: mariadb:latest
+    container_name: "mariadb-server"
+    restart: always
+    environment:
+        MARIADB_DATABASE: wordpress
+        MARIADB_USER: henry
+        MARIADB_PASSWORD: any
+        MARIADB_ALLOW_EMPTY_PASSWORD: 1
+        MARIADB_ROOT_PASSWORD: cool
+    volumes:
+      - "/kkk/db:/var/lib/mysql"
     
 
   phpmyadmin:

@@ -64,7 +64,6 @@ variable "rds_instance" {
         engine_version       = string
         instance_class       = string
         username             = string
-        password             = string
         skip_final_snapshot  = string
         publicly_accessible  = bool
         

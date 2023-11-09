@@ -44,7 +44,7 @@ public_subnets = [
 ]
 
 security_group ={
-  name = "Serious Security"
+  name = "vpc security"
   ports = [ "22", "80" ]
 } 
 
@@ -66,7 +66,7 @@ db-parameter-group = "mariadb10.6"
 
 
 rds_instance = {
-  rds_instance_name    = "test-3-db"
+  rds_instance_name    = "mariadb-rds"
   allocated_storage    = "20"
   storage_type         = "gp2"
   db_name              = "wordpress"
@@ -74,7 +74,6 @@ rds_instance = {
   engine_version       = "10.6.14"
   instance_class       = "db.t3.micro"
   username             = "henry"
-  password             = "any12345"
   parameter_group_name = "mariadb-10.6.14"
   skip_final_snapshot  = "true"
   publicly_accessible  = "false"

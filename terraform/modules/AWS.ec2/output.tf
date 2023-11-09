@@ -29,3 +29,14 @@ output "Load-Balancer-Data" {
         ID = aws_lb.multi-pulti[0].id
     }
 }
+
+output "RDS-Data" {
+    description = "RDS main data"
+    value = {
+        Name = aws_db_instance.lamp-db.identifier
+        ID   = aws_db_instance.lamp-db.id
+        Endpoint = aws_db_instance.lamp-db.address
+
+    }
+  
+}

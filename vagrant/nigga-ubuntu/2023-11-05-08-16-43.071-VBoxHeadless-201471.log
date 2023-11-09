@@ -1,0 +1,12 @@
+Log created: 2023-11-05T08:16:43.714981000Z
+Process ID:  201471 (0x312ff)
+Parent PID:  3330 (0xd02)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: nigga-ubuntu_wordpress_1699107287865_98309
+Arg[3]: --startvm
+Arg[4]: 290019d4-a27a-49b3-bc6f-f9949a9bb7a3
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2
