@@ -27,7 +27,7 @@ module "subnets" {
 }
 
 module "igw" {
-  source                  = "../modules/aws-igw"
+  source                  = "../modules/aws-internet-gateway"
   vpc_id                  = data.aws_vpc.vpc.id
   igw_name                = var.igw_name
   common_tags             = var.common_tags
@@ -40,34 +40,40 @@ module "nat" {
   depends_on              = [ module.subnets ]
 }
 
-data "aws_internet_gateway" "out" {
-  tags                    = {
-    Name                  = var.igw_name
-  }
-  depends_on              = [ module.igw ]
-}
-
 module "public_root_table" {
   source                  = "../modules/aws-route-table-igw"
   igw_route_table_params  = var.igw_route_table_params
   vpc_id                  = data.aws_vpc.vpc.id
-  route_table_target_id   = data.aws_internet_gateway.out.id
   common_tags             = var.common_tags
-  depends_on              = [ module.subnets ]
-}
-
-data "aws_nat_gateway" "out" {
-  tags                    = {
-    Name                  = var.nat.name
-  }
-  depends_on              = [ module.nat ]
+  depends_on              = [ module.subnets, module.igw ]
 }
 
 module "private_root_table" {
   source                  = "../modules/aws-route-table-nat"
   nat_route_table_params  = var.nat_route_table_params
   vpc_id                  = data.aws_vpc.vpc.id
-  route_table_target_id   = data.aws_nat_gateway.out.id
   common_tags             = var.common_tags
-  depends_on              = [ module.subnets ]
+  depends_on              = [ module.subnets, module.nat ]
+}
+
+module "ec2_1" {
+  source                  = "../modules/aws-ec2-instance"
+  ec2                     = var.ec2
+  common_tags             = var.common_tags  
+  public_key_contents     = var.public_key_contents
+  depends_on              = [ module.vpc, module.subnets ]
+}
+
+module "load_balancer" {
+  source                  = "../modules/aws-load-balancer"
+  load_balancer           = var.load_balancer
+  common_tags             = var.common_tags
+  depends_on              = [ module.ec2_1, module.subnets ]
+}
+
+module "target_group" {
+  source                  = "../modules/aws-target-group"
+  target_group            = var.target_group
+  common_tags             = var.common_tags
+  depends_on = [ module.vpc, module.ec2_1, module.load_balancer ]
 }

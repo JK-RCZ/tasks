@@ -1,23 +1,34 @@
 #This module depends on subnets, please set respective dependensies in root module
 
+
+data "aws_subnet" "private_subnet" {
+  count = length(var.nat.private_subnet_name)
+  tags                      = {
+    Name                    = var.nat.private_subnet_name[count.index]  
+  }
+}
+
+
 resource "aws_eip" "uno" {
+  count = length(var.nat.private_subnet_name)
   domain                    = var.nat.domain
-  associate_with_private_ip = var.nat.private_subnet_cidr_block 
+  associate_with_private_ip = data.aws_subnet.private_subnet[count.index].cidr_block 
   
-  tags                      = merge(var.common_tags, {Name = "${var.nat.name} EIP"})
+  tags                      = merge(var.common_tags, {Name = "${var.nat.nat_name[count.index]} EIP"})
 }
 
 data "aws_subnet" "public_subnet" {
+  count = length(var.nat.private_subnet_name)
   tags                      = {
-    Name                    = var.nat.public_subnet_name  }
-  
-  depends_on                = [ resource.aws_eip.uno ]
+    Name                    = var.nat.public_subnet_name[count.index]  
+  }
 }
 
 
 resource "aws_nat_gateway" "due" {
-  allocation_id             = aws_eip.uno.id
-  subnet_id                 = data.aws_subnet.public_subnet.id
+  count = length(var.nat.private_subnet_name)
+  allocation_id             = aws_eip.uno[count.index].id
+  subnet_id                 = data.aws_subnet.public_subnet[count.index].id
 
-  tags                      = merge(var.common_tags, {Name = "${var.nat.name}"})
+  tags                      = merge(var.common_tags, {Name = "${var.nat.nat_name[count.index]}"})
 }
