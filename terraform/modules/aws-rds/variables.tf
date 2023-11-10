@@ -1,32 +1,42 @@
-variable "rds" {
-    description = "value"
-    type = object({
-      rds_params = object({
-        subnet_names = list(string)
-        rds_instance_name = string
-        rds_family = string
-      password_params = object({
-        length = string
-        type = string
-      security_group_params = object({
-        vpc_name = string
-        ingress_description = string
-        ingress_port = string
-        ingress_protocol = string
-        ingress_cidr_blocks = string
-        ingress_ipv6_cidr_blocks = string
-        ingress_prefix_list_ids = string
-        ingress_self = string
-        ingress_security_group_names = list()
-      })  
-      })
+#  This module depends on Subnets, VPC, Security Groups.
+#  Please set respective dependensies in root module!
 
-      })
+variable "rds" {
+    description                          = "RDS, RDS password and RDS security group parameters"
+    type                                 = object({
+        rds_params                       = object({
+            subnet_names                 = list(string)
+            rds_instance_name            = string
+            rds_family                   = string
+            rds_allocated_storage        = string
+            rds_storage_type             = string
+            rds_db_name                  = string
+            rds_engine                   = string
+            rds_engine_version           = string
+            rds_instance_class           = string
+            rds_username                 = string
+            rds_skip_final_snapshot      = bool
+            rds_publicly_accessible      = bool
+        })
+        password_params                  = object({
+            length                       = string
+            type                         = string
+        })
+        security_group_params            = object({
+            vpc_name                     = string
+            ingress_description          = string
+            ingress_port                 = string
+            ingress_protocol             = string
+            ingress_cidr_blocks          = list(string)
+            ingress_ipv6_cidr_blocks     = list(string)
+            ingress_prefix_list_ids      = list(string)
+            ingress_self                 = bool
+            ingress_security_group_names = list(string)
+        })
     })
-  
 }
 
 variable "common_tags" {
-    description                         = "Tags suitable for all resources"
-    type                                = map
+    description                          = "Tags suitable for all resources"
+    type                                 = map
 }

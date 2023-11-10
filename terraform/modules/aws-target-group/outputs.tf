@@ -4,8 +4,3 @@ output "Target-Group-Data" {
         ID   = aws_lb_target_group.einz.id
     }
 }
-
-output "ec2-full-data" {
-    value = data.aws_instance.data
-  
-}

@@ -75,5 +75,12 @@ module "target_group" {
   source                  = "../modules/aws-target-group"
   target_group            = var.target_group
   common_tags             = var.common_tags
-  depends_on = [ module.vpc, module.ec2_1, module.load_balancer ]
+  depends_on              = [ module.vpc, module.ec2_1, module.load_balancer ]
+}
+
+module "rds" {
+  source                  = "../modules/aws-rds"
+  rds                     = var.rds
+  common_tags             = var.common_tags
+  depends_on              = [ module.vpc, module.subnets, module.ec2_1 ]
 }
