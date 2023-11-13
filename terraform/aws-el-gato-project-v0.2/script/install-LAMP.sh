@@ -15,13 +15,8 @@
 sudo yum update
 sudo yum install -y git
 sudo yum install -y docker
-curl -s https://api.github.com/repos/docker/compose/releases/latest \
-  | grep browser_download_url \
-  | grep docker-compose-linux-x86_64 \
-  | cut -d '"' -f 4 \
-  | wget -qi -
-chmod +x docker-compose-linux-x86_64
-sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 sudo systemctl start docker
 git clone https://github.com/JK-RCZ/tasks.git
 cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/
