@@ -3,56 +3,29 @@ version: "3.8"
 services:
 
   wordpress:
-
     build:
       context: ./wordpress
-    #image: wordpress:6.3.1
     container_name: "wordpress-webserver"
     restart: always
-    #volumes:
-    #  - "/kkk/site:/var/www/localhost/htdocs"
-    # - "/kkk/site:/kkk/site"
-    #  - "./site:/usr/local/apache2/htdocs"
     depends_on:
-      - db
       - cache
     environment:
       REDIS_HOST: cache
       REDIS_PORT: 6379
-      
     ports:
       - "80:80"
       
-    
-  
-#  db:
-#
-#    image: mariadb:latest
-#    container_name: "mariadb-server"
-#    restart: always
-#    environment:
-#        MARIADB_DATABASE: wordpress
-#        MARIADB_USER: henry
-#        MARIADB_PASSWORD: any
-#        MARIADB_ALLOW_EMPTY_PASSWORD: 1
-#        MARIADB_ROOT_PASSWORD: cool
-#    volumes:
-#      - "/kkk/db:/var/lib/mysql"
-    
-
-  phpmyadmin:
-    
+  phpmyadmin:    
     image: phpmyadmin:latest
     container_name: phpmyadmin-server
     restart: always
     ports:
       - 8001:80
     environment:
-      - PMA_HOST=db
+      - PMA_HOST=EMPTY
       - PMA_PORT=3306
 
   cache:
-
     image: redis:latest
     container_name: redis-cache
     restart: always

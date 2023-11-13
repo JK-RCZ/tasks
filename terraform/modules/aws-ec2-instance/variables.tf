@@ -1,13 +1,10 @@
+# This module depends on subnets and security groups.
+# Please set respective dependensies in root module!
+
 variable "ec2" {
     description                         = "EC2 and assotiated security group parameters"
     type                                = object({
       public_key_name                   = string
-      vpc_name                          = string
-      security_group_parameters         = object(
-        {
-            sg_name                     = string
-            inbound_ports_to_open       = list(string)
-        })
       instance_parameters               = object(
         {
             instance_name               = string
@@ -16,6 +13,7 @@ variable "ec2" {
             subnet_name                 = string
             associate_public_ip_address = bool
             user_data_path              = string
+            security_group_names        = list(string)
         })
     })
 }

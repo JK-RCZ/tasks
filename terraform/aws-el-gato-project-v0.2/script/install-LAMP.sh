@@ -24,5 +24,5 @@ chmod +x docker-compose-linux-x86_64
 sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
 sudo systemctl start docker
 git clone https://github.com/JK-RCZ/tasks.git
-cd /tasks/docker/LAMP/
+cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/
 sudo docker-compose up -d

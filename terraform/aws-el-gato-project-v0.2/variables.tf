@@ -66,12 +66,6 @@ variable "ec2" {
     description                                  = "EC2, assotiated public key and security group parameters"
     type                                         = object({
       public_key_name                            = string
-      vpc_name                                   = string
-      security_group_parameters                  = object(
-        {
-            sg_name                              = string
-            inbound_ports_to_open                = list(string)
-        })
       instance_parameters                        = object(
         {
             instance_name                        = string
@@ -80,6 +74,7 @@ variable "ec2" {
             subnet_name                          = string
             associate_public_ip_address          = bool
             user_data_path                       = string
+            security_group_names                 = list(string)
         })
     })
 }
@@ -101,7 +96,20 @@ variable "load_balancer" {
     })
 }
 
-variable "target_group" {
+variable "tg_80" {
+    description                                  = "Target group parameters"
+    type                                         = object({
+      tg_name                                    = string
+      tg_port                                    = string
+      tg_protocol                                = string
+      tg_target_type                             = string
+      vpc_name                                   = string
+      instance_name                              = string
+      load_balancer_name                         = string
+    })
+}
+
+variable "tg_8001" {
     description                                  = "Target group parameters"
     type                                         = object({
       tg_name                                    = string
@@ -130,21 +138,77 @@ variable "rds" {
             rds_username                         = string
             rds_skip_final_snapshot              = bool
             rds_publicly_accessible              = bool
+            rds_security_group_names             = list(string)
         })
         password_params                          = object({
             length                               = string
             type                                 = string
         })
-        security_group_params                    = object({
-            vpc_name                             = string
-            ingress_description                  = string
-            ingress_port                         = string
-            ingress_protocol                     = string
-            ingress_cidr_blocks                  = list(string)
-            ingress_ipv6_cidr_blocks             = list(string)
-            ingress_prefix_list_ids              = list(string)
-            ingress_self                         = bool
-            ingress_security_group_names         = list(string)
-        })
     })
+}
+
+variable "sec_1" {
+    type                                         = object(
+        {
+            vpc_name                             = string
+            sg_name                              = string
+            sg_descritption                      = string
+            ingress                              = list(object(
+                {
+                    ingress_description          = string
+                    ingress_port                 = string
+                    ingress_protocol             = string
+                    ingress_cidr_blocks          = list(string)
+                    ingress_ipv6_cidr_blocks     = list(string)
+                    ingress_prefix_list_ids      = list(string)
+                    ingress_self                 = bool
+                }
+            ))
+            egress                               = object(
+                {
+                    egress_description           = string
+                    egress_port                  = string
+                    egress_protocol              = string
+                    egress_cidr_blocks           = list(string)
+            })
+        })
+  
+}
+
+variable "sec_2" {
+    type                                         = object(
+        {
+            vpc_name                             = string
+            sg_name                              = string
+            sg_descritption                      = string
+            ingress                              = list(object(
+                {
+                    ingress_description          = string
+                    ingress_port                 = string
+                    ingress_protocol             = string
+                    ingress_cidr_blocks          = list(string)
+                    ingress_ipv6_cidr_blocks     = list(string)
+                    ingress_prefix_list_ids      = list(string)
+                    ingress_self                 = bool
+                }
+            ))
+            egress                               = object(
+                {
+                    egress_description           = string
+                    egress_port                  = string
+                    egress_protocol              = string
+                    egress_cidr_blocks           = list(string)
+            })
+        })
+  
+}
+
+variable "ingress_from_existent_security_groups_for_sec_1" {
+    description                                  = "List of security groups from which traffic allowed"
+    type                                         = list(string)
+}
+
+variable "ingress_from_existent_security_groups_for_sec_2" {
+    description                                  = "List of security groups from which traffic allowed"
+    type                                         = list(string)
 }

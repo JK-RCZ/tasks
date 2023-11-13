@@ -1,4 +1,4 @@
-#  This module depends on Subnets, VPC, Security Groups.
+#  This module depends on Subnets and Security Groups.
 #  Please set respective dependensies in root module!
 
 variable "rds" {
@@ -17,21 +17,11 @@ variable "rds" {
             rds_username                 = string
             rds_skip_final_snapshot      = bool
             rds_publicly_accessible      = bool
+            rds_security_group_names     = list(string)
         })
         password_params                  = object({
             length                       = string
             type                         = string
-        })
-        security_group_params            = object({
-            vpc_name                     = string
-            ingress_description          = string
-            ingress_port                 = string
-            ingress_protocol             = string
-            ingress_cidr_blocks          = list(string)
-            ingress_ipv6_cidr_blocks     = list(string)
-            ingress_prefix_list_ids      = list(string)
-            ingress_self                 = bool
-            ingress_security_group_names = list(string)
         })
     })
 }

@@ -1,3 +1,4 @@
+/*
 output "ENVIRONMENT" {
     value = [ 
         module.vpc, 
@@ -8,7 +9,11 @@ output "ENVIRONMENT" {
         module.private_root_table, 
         module.ec2_1, 
         module.load_balancer, 
-        module.target_group,
+        module.tg_80,
+        module.tg_8001,
+        module.ec2_1_security_group,
+        module.rds_security_group,
         module.rds 
     ]
 }
+*/
