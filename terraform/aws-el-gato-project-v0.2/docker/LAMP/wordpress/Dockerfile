@@ -18,6 +18,7 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && chown -R apache:apache /var/www/localhost/htdocs/ \
     && chmod 755 /var/www/localhost/htdocs/ \
     && echo "ServerName localhost" >> /etc/apache2/httpd.conf \
+    && chmod 755 /tmp/change-wp-config.sh \
     && /tmp/change-wp-config.sh
 CMD ["apachectl", "-D", "FOREGROUND"]
 

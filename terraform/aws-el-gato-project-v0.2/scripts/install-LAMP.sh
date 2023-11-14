@@ -19,7 +19,6 @@ sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 sudo systemctl start docker
 git clone https://github.com/JK-RCZ/tasks.git
+/usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-db-endpoint.sh
 cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/
-source  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-db-endpoint.sh
-
 sudo docker-compose up -d
