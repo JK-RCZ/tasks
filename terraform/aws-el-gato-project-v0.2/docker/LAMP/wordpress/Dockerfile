@@ -8,6 +8,7 @@ RUN apk update && apk upgrade && apk add \
     mariadb-client \
     php82-apache2 \
     redis
+COPY change-wp-config.sh /tmp/change-wp-config.sh
 RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && wget https://wordpress.org/latest.tar.gz \
     && tar -xzvf latest.tar.gz \
@@ -15,7 +16,8 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && rm /var/www/localhost/htdocs/index.html \
     && cp -a /usr/share/webapps/wordpress/. /var/www/localhost/htdocs/ \
     && chown -R apache:apache /var/www/localhost/htdocs/ \
-    && chmod 755 /var/www/localhost/htdocs/
-RUN echo "ServerName localhost" >> /etc/apache2/httpd.conf
+    && chmod 755 /var/www/localhost/htdocs/ \
+    && echo "ServerName localhost" >> /etc/apache2/httpd.conf \
+    && /tmp/change-wp-config.sh
 CMD ["apachectl", "-D", "FOREGROUND"]
 
