@@ -1,4 +1,5 @@
-#This module depends on security group and subnets please set respective dependensies in root module
+#This module depends on Security Group and Subnets. 
+# Please set respective dependensies in root module!
 
 data "aws_security_group" "data" {
     for_each                  = toset(var.load_balancer.security_group_names)

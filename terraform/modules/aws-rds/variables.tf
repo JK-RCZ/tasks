@@ -20,6 +20,7 @@ variable "rds" {
             rds_security_group_names     = list(string)
         })
         password_params                  = object({
+            name                         = string
             length                       = string
             type                         = string
         })

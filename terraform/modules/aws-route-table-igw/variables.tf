@@ -1,17 +1,17 @@
-variable "vpc_id" {
-    description                                  = "VPC ID route table would belong to"
-    type                                         = string
-}
+# This module uses internet gateway as a target
 
+# This module depends on Subnets, VPC and Internet Gateway.
+# Please set respective dependensies in root module!
 
-variable "igw_route_table_params" {
-    description                                  = "Name of route table, destination of route table, internet gateway and subnet names to stick route table to"
+variable "route_table_igw" {
+    description                                  = "This root table uses Internet Gateway as default target!"
     type                                         = object({
       name                                       = string
       destination_cidr_block                     = string
       igw_name                                   = string
       subnet_name                                = list(string)
-    })  
+      vpc_name                                   = string
+    })
 }
 
 variable "common_tags" {

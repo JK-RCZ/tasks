@@ -1,4 +1,5 @@
-#This module depends on security groups and subnets, please set respective dependensies in root module
+#This module depends on Security Group and Subnets. 
+# Please set respective dependensies in root module!
 
 
 variable "load_balancer" {

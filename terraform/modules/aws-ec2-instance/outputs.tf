@@ -7,3 +7,4 @@ output "Instance-Data" {
         Subnet_id             = aws_instance.zwei.subnet_id
     }
 }
+

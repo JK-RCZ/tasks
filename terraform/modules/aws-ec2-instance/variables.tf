@@ -1,8 +1,8 @@
-# This module depends on subnets, security groups and RDS instance if applicapable.
+# This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable).
 # Please set respective dependensies in root module!
 
 variable "ec2" {
-    description                         = "EC2 and assotiated security group parameters"
+    description                         = "EC2, assotiated security group and RDS instance parameters"
     type                                = object({
       public_key_name                   = string
       instance_parameters               = object(
@@ -18,6 +18,7 @@ variable "ec2" {
       rds_instance_parameters           = object({
         gather_rds_instance_data        = bool
         rds_instance_name               = string
+        ssm_name                        = string
       })
     })
 }

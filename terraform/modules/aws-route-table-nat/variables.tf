@@ -1,3 +1,10 @@
+# This module uses NAT as a target
+
+# This module depends on Subnets, VPC and NAT(s).
+# Please set respective dependensies in root module!
+
+
+
 # Private subnet list corresponds to root table name whitch connects subnet to apropriate NAT
 
 # e.g. private_subnet_name = ["priv 1",  "priv 2", ...  "priv N"]
@@ -8,16 +15,12 @@
 
 
 
-variable "vpc_id" {
-    description                                  = "VPC ID route table would belong to"
-    type                                         = string
-}
 
-
-variable "nat_route_table_params" {
-    description                                  = "Name of route table, destination of route table, subnet names to stick route table to"
+variable "route_table_nat" {
+    description                                  = "This root table uses NAT(s) as default target!"
     type                                         = object({
       destination_cidr_block                     = string
+      vpc_name                                   = string
       private_subnet_name                        = list(string)
       route_table_name                           = list(string)
       nat_name                                   = list(string)

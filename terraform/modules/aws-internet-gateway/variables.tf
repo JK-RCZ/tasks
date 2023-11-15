@@ -1,11 +1,12 @@
-variable "vpc_id" {
-    description                 = "VPC ID to stick to"
-    type                        = string
-}
+# This module depends on VPC.
+# Please set respective dependensies in root module!
 
-variable "igw_name" {
-    description                 = "IGW name"
-    type                        = string
+variable "igw" {
+    description                 = "IGW name and respective VPC name"
+    type                        = object({
+      igw_name                  = string
+      vpc_name                  = string
+    })
 }
 
 variable "common_tags" {

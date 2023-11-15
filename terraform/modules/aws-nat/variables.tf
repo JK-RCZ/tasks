@@ -1,5 +1,7 @@
-# Private subnet list corresponds to public subnet, where respective NAT would be created
+# This module depends on Subnets.
+# Please set respective dependensies in root module!
 
+# Private subnet list corresponds to public subnet, where respective NAT would be created
 # e.g. private_subnet_name = ["priv 1", "priv 2", ... "priv N"]
 #                                |        |            |
 #                               \/       \/           \/

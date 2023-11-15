@@ -1,4 +1,5 @@
-#This module depends on subnets, please set respective dependensies in root module
+# This module depends on Subnets.
+# Please set respective dependensies in root module!
 
 
 data "aws_subnet" "private_subnet" {
@@ -8,6 +9,12 @@ data "aws_subnet" "private_subnet" {
   }
 }
 
+data "aws_subnet" "public_subnet" {
+  count = length(var.nat.private_subnet_name)
+  tags                      = {
+    Name                    = var.nat.public_subnet_name[count.index]  
+  }
+}
 
 resource "aws_eip" "uno" {
   count = length(var.nat.private_subnet_name)
@@ -16,14 +23,6 @@ resource "aws_eip" "uno" {
   
   tags                      = merge(var.common_tags, {Name = "${var.nat.nat_name[count.index]} EIP"})
 }
-
-data "aws_subnet" "public_subnet" {
-  count = length(var.nat.private_subnet_name)
-  tags                      = {
-    Name                    = var.nat.public_subnet_name[count.index]  
-  }
-}
-
 
 resource "aws_nat_gateway" "due" {
   count = length(var.nat.private_subnet_name)

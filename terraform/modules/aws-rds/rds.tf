@@ -33,10 +33,10 @@ resource "random_string" "drei" {
 }
 
 resource "aws_ssm_parameter" "vier" {
-  name                     = "${var.rds.rds_params.rds_instance_name}-password" 
+  name                     = "${var.rds.password_params.name}" 
   type                     = var.rds.password_params.type
   value                    = random_string.drei.result
-  tags                     = merge(var.common_tags, {Name = "${var.rds.rds_params.rds_instance_name}-password"})
+  tags                     = merge(var.common_tags, {Name = "${var.rds.rds_params.rds_instance_name}"})
 }
 
 resource "aws_db_instance" "funf" {

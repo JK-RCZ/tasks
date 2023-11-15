@@ -1,4 +1,4 @@
-/*
+
 output "ENVIRONMENT" {
     value = [ 
         module.vpc, 
@@ -16,9 +16,3 @@ output "ENVIRONMENT" {
         module.rds 
     ]
 }
-
-output "test" {
-    value = data.aws_db_instance.data
-  
-}
-*/

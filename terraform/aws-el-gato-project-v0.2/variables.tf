@@ -16,19 +16,25 @@ variable "vpc" {
 
 variable "subnets" {
     description                                  = "Subnets"
-    type                                         = list(object({
-      name                                       = string
-      cidr_block                                 = string
-      map_public_ip_on_launch                    = bool
-      availability_zone                          = string
-    }))
-    
+    type                                         = object({
+      subnets_params                             = list(object({
+        name                                     = string
+        cidr_block                               = string
+        map_public_ip_on_launch                  = bool
+        availability_zone                        = string
+      }))
+      vpc_name                                   = string
+    })
 }
 
-variable "igw_name" {
-    description                                  = "IGW name"
-    type                                         = string
+variable "igw" {
+    description                                  = "IGW parameters"
+    type                                         = object({
+      igw_name                                   = string
+      vpc_name                                   = string
+    })
 }
+
 
 variable "nat" {
     description                                  = "NAT main options"
@@ -42,20 +48,22 @@ variable "nat" {
   
 }
 
-variable "igw_route_table_params" {
-    description                                  = "Name of route table, destination of route table, internet gateway and subnet names to stick route table to"
+variable "route_table_igw" {
+    description                                  = "This root table uses Internet Gateway as default target!"
     type                                         = object({
       name                                       = string
       destination_cidr_block                     = string
       igw_name                                   = string
       subnet_name                                = list(string)
-    })  
+      vpc_name                                   = string
+    })
 }
 
-variable "nat_route_table_params" {
+variable "route_table_nat" {
     description                                  = "Name of route table, destination of route table, subnet names to stick route table to"
     type                                         = object({
       destination_cidr_block                     = string
+      vpc_name                                   = string
       private_subnet_name                        = list(string)
       route_table_name                           = list(string)
       nat_name                                   = list(string)
@@ -63,22 +71,23 @@ variable "nat_route_table_params" {
 }
 
 variable "ec2" {
-    description                         = "EC2 and assotiated security group parameters"
-    type                                = object({
-      public_key_name                   = string
-      instance_parameters               = object(
+    description                                  = "EC2 and assotiated security group parameters"
+    type                                         = object({
+      public_key_name                            = string
+      instance_parameters                        = object(
         {
-            instance_name               = string
-            instance_ami                = string
-            instance_type               = string
-            subnet_name                 = string
-            associate_public_ip_address = bool
-            user_data_path              = string
-            security_group_names        = list(string)
+            instance_name                        = string
+            instance_ami                         = string
+            instance_type                        = string
+            subnet_name                          = string
+            associate_public_ip_address          = bool
+            user_data_path                       = string
+            security_group_names                 = list(string)
         })
-      rds_instance_parameters = object({
-        gather_rds_instance_data = bool
-        rds_instance_name = string
+      rds_instance_parameters                    = object({
+        gather_rds_instance_data                 = bool
+        rds_instance_name                        = string
+        ssm_name                                 = string
       })
     })
 }
@@ -145,6 +154,7 @@ variable "rds" {
             rds_security_group_names             = list(string)
         })
         password_params                          = object({
+            name                                 = string
             length                               = string
             type                                 = string
         })
