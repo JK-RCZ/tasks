@@ -63,19 +63,23 @@ variable "nat_route_table_params" {
 }
 
 variable "ec2" {
-    description                                  = "EC2, assotiated public key and security group parameters"
-    type                                         = object({
-      public_key_name                            = string
-      instance_parameters                        = object(
+    description                         = "EC2 and assotiated security group parameters"
+    type                                = object({
+      public_key_name                   = string
+      instance_parameters               = object(
         {
-            instance_name                        = string
-            instance_ami                         = string
-            instance_type                        = string
-            subnet_name                          = string
-            associate_public_ip_address          = bool
-            user_data_path                       = string
-            security_group_names                 = list(string)
+            instance_name               = string
+            instance_ami                = string
+            instance_type               = string
+            subnet_name                 = string
+            associate_public_ip_address = bool
+            user_data_path              = string
+            security_group_names        = list(string)
         })
+      rds_instance_parameters = object({
+        gather_rds_instance_data = bool
+        rds_instance_name = string
+      })
     })
 }
 

@@ -11,6 +11,11 @@
 #sudo docker-compose up -d
 # FOR SUSE------------------------------------------
 
+echo "${db_name}" > /tmp/db_data.txt
+echo "${db_user}" >> /tmp/db_data.txt
+echo "${db_host}" >> /tmp/db_data.txt
+echo "${db_pass}" >> /tmp/db_data.txt
+
 
 yum update
 yum install -y git
@@ -19,6 +24,6 @@ curl -L https://github.com/docker/compose/releases/latest/download/docker-compos
 chmod +x /usr/local/bin/docker-compose
 systemctl start docker
 git clone https://github.com/JK-RCZ/tasks.git
-/usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-db-endpoint.sh
+/usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-config.sh
 cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/
 docker-compose up -d

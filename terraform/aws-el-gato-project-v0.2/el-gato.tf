@@ -90,14 +90,14 @@ module "ec2_1" {
   ec2                      = var.ec2
   common_tags              = var.common_tags  
   public_key_contents      = var.public_key_contents
-  depends_on               = [ module.ec2_1_security_group, module.subnets ]
+  depends_on               = [ module.ec2_1_security_group, module.subnets, /*module.rds,*/ module.load_balancer ]
 }
 
 module "load_balancer" {
   source                   = "../modules/aws-load-balancer"
   load_balancer            = var.load_balancer
   common_tags              = var.common_tags
-  depends_on               = [ module.ec2_1, module.subnets ]
+  depends_on               = [ module.subnets ]
 }
 
 module "tg_80" {

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-echo "1.sh started"
+sed '4!d' 1.txt

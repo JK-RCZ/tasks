@@ -1,4 +1,4 @@
-# This module depends on subnets and security groups.
+# This module depends on subnets, security groups and RDS instance if applicapable.
 # Please set respective dependensies in root module!
 
 variable "ec2" {
@@ -15,6 +15,10 @@ variable "ec2" {
             user_data_path              = string
             security_group_names        = list(string)
         })
+      rds_instance_parameters           = object({
+        gather_rds_instance_data        = bool
+        rds_instance_name               = string
+      })
     })
 }
 
