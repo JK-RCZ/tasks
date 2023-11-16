@@ -43,7 +43,7 @@ resource "aws_lb_listener" "drei" {
   load_balancer_arn      = data.aws_lb.data.id
   port                   = var.target_group.tg_port
   protocol               = var.target_group.tg_protocol
-  tags                   = merge(var.common_tags, {Name = "${var.target_group.tg_name} listener"})
+  tags                   = merge(var.common_tags, {Name = "${var.target_group.listener_name}"})
   
   default_action {
     type                 = "forward"

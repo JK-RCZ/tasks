@@ -116,6 +116,7 @@ variable "tg_80" {
       tg_port                                    = string
       tg_protocol                                = string
       tg_target_type                             = string
+      listener_name                              = string
       vpc_name                                   = string
       instance_name                              = string
       load_balancer_name                         = string
@@ -129,6 +130,7 @@ variable "tg_8001" {
       tg_port                                    = string
       tg_protocol                                = string
       tg_target_type                             = string
+      listener_name                              = string
       vpc_name                                   = string
       instance_name                              = string
       load_balancer_name                         = string
@@ -225,4 +227,22 @@ variable "ingress_from_existent_security_groups_for_sec_1" {
 variable "ingress_from_existent_security_groups_for_sec_2" {
     description                                  = "List of security groups from which traffic allowed"
     type                                         = list(string)
+}
+
+variable "listener_rule" {
+    description                                  = "Load balancer listener rule parameters"
+    type                                         = object({
+        listener_rule_parameters                 = object({
+          name                                   = string
+          action_type                            = string
+          priority                               = string
+          path_pattern_values                    = list(string)
+          
+        })
+        environment_parameters                   = object({
+          listener_name                          = string
+          target_group_name                      = string
+          lb_name                                = string
+        })
+    })
 }

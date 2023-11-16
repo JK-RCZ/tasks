@@ -8,6 +8,7 @@ variable "target_group" {
       tg_port                           = string
       tg_protocol                       = string
       tg_target_type                    = string
+      listener_name                     = string
       vpc_name                          = string
       instance_name                     = string
       load_balancer_name                = string

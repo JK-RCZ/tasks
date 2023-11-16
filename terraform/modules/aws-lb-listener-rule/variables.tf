@@ -1,0 +1,25 @@
+# This module depends on Load balancer, Load Balancer Listener, Target Group.
+
+
+variable "listener_rule" {
+    description                         = "Load balancer listener rule parameters"
+    type                                = object({
+        listener_rule_parameters        = object({
+          name                          = string
+          action_type                   = string
+          priority                      = string
+          path_pattern_values           = list(string)
+          
+        })
+        environment_parameters          = object({
+          listener_name                 = string
+          target_group_name             = string
+          lb_name                       = string
+        })
+    })
+}
+
+variable "common_tags" {
+    description                         = "Tags suitable for all resources"
+    type                                = map
+}
