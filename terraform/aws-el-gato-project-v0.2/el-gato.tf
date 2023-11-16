@@ -43,14 +43,14 @@ module "private_root_table" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc, module.subnets, module.nat ]
 }
-/*
+
 module "rds" {
   source                                = "../modules/aws-rds"
   rds                                   = var.rds
   common_tags                           = var.common_tags
   depends_on                            = [ module.subnets, module.rds_security_group ]
 }
-*/
+
 module "ec2_1" {
   source                                = "../modules/aws-ec2-instance"
   ec2                                   = var.ec2
@@ -88,7 +88,7 @@ module "ec2_1_security_group" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
-/*
+
 module "rds_security_group" {
   source                                = "../modules/aws-security-group"
   security_group                        = var.sec_2
@@ -97,10 +97,5 @@ module "rds_security_group" {
   depends_on                            = [ module.vpc, module.ec2_1_security_group ]
   
 }
-*/
-module "phpmyadmin_listener_rule" {
-  source                                = "../modules/aws-lb-listener-rule"
-  listener_rule                         = var.listener_rule
-  common_tags                           = var.common_tags
-  depends_on = [ module.load_balancer, module.tg_8001 ]
-}
+
+

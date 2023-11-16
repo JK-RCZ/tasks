@@ -1,4 +1,4 @@
-# This module depends on Load balancer, Load Balancer Listener, Target Group.
+# This module depends on Load Balancer Listener and Target Group.
 
 
 variable "listener_rule" {
@@ -14,7 +14,6 @@ variable "listener_rule" {
         environment_parameters          = object({
           listener_name                 = string
           target_group_name             = string
-          lb_name                       = string
         })
     })
 }

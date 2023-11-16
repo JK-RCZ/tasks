@@ -1,0 +1,6 @@
+FROM alpine:3.18.3
+RUN apk update && apk upgrade && apk add \
+    nginx
+COPY change-nginx-config.sh /tmp/change-nginx-config.sh
+RUN chmod 755 /tmp/change-nginx-config.sh && /tmp/change-nginx-config.sh
+CMD ["apachectl", "-D", "FOREGROUND"]

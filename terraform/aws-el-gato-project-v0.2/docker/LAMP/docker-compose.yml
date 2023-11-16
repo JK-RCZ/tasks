@@ -19,10 +19,7 @@ services:
       REDIS_HOST: cache
       REDIS_PORT: 6379
       
-    ports:
-      - "80:80"
-      
-    
+       
   
   db:
 
@@ -44,8 +41,8 @@ services:
     image: phpmyadmin:latest
     container_name: phpmyadmin-server
     restart: always
-    ports:
-      - 8001:80
+    #ports:
+    #  - 8001:80
     environment:
       - PMA_HOST=xyz
       - PMA_PORT=3306
@@ -56,5 +53,13 @@ services:
     container_name: redis-cache
     restart: always
     command: redis-server --save 20 1 --loglevel warning
-    
+
+  nginx:
+
+    image: nginx:1.25.3
+    container_name: nginx_reverse_proxy
+    restart: always
+    ports:
+      - "80:80"
+
     

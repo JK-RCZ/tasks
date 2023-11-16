@@ -39,7 +39,6 @@ resource "aws_key_pair" "ein" {
 }
 
 resource "aws_instance" "zwei" {
-  
   ami                         = var.ec2.instance_parameters.instance_ami
   instance_type               = var.ec2.instance_parameters.instance_type
   subnet_id                   = data.aws_subnet.data.id

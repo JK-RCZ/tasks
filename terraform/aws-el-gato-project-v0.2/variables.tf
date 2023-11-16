@@ -229,20 +229,3 @@ variable "ingress_from_existent_security_groups_for_sec_2" {
     type                                         = list(string)
 }
 
-variable "listener_rule" {
-    description                                  = "Load balancer listener rule parameters"
-    type                                         = object({
-        listener_rule_parameters                 = object({
-          name                                   = string
-          action_type                            = string
-          priority                               = string
-          path_pattern_values                    = list(string)
-          
-        })
-        environment_parameters                   = object({
-          listener_name                          = string
-          target_group_name                      = string
-          lb_name                                = string
-        })
-    })
-}
