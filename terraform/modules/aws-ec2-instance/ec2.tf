@@ -31,6 +31,11 @@ data "aws_ssm_parameter" "data" {
   name = var. ec2.rds_instance_parameters.ssm_name
 }
 
+data "aws_lb" "data" {
+  count                       = var.ec2.rds_instance_parameters.gather_rds_instance_data ? 1 : 0
+  name = var.ec2.rds_instance_parameters.load_balancer_name
+}
+
 resource "aws_key_pair" "ein" {
   key_name                    = var.ec2.public_key_name
   public_key                  = var.public_key_contents
@@ -52,6 +57,7 @@ resource "aws_instance" "zwei" {
         db_user = data.aws_db_instance.data[0].master_username,
         db_host = data.aws_db_instance.data[0].address,       
         db_pass = data.aws_ssm_parameter.data[0].value
+        lb_host = data.aws_lb.data[0].dns_name
       }
   ) : "${file(var.ec2.instance_parameters.user_data_path)}"
   tags                        = merge(var.common_tags, {Name = "${var.ec2.instance_parameters.instance_name}"})

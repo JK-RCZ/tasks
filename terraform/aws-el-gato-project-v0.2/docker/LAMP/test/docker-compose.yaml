@@ -1,0 +1,79 @@
+version: "3.8"
+
+#networks:
+#  local-network:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 192.168.55.0/24
+#          gateway: 192.168.55.1
+
+services:
+
+  wordpress:
+    build:
+      context: ../wordpress
+    container_name: "wordpress-webserver"
+    restart: always
+    depends_on:
+      - db
+      - cache
+    environment:
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+    ports:
+      - 8002:80
+#    networks:
+#      local-network:
+#        ipv4_address: 192.168.55.2
+      
+  db:
+    image: mariadb:latest
+    container_name: "mariadb-server"
+    restart: always
+    environment:
+        MARIADB_DATABASE: wordpress
+        MARIADB_USER: henry
+        MARIADB_PASSWORD: any
+        MARIADB_ALLOW_EMPTY_PASSWORD: 1
+        MARIADB_ROOT_PASSWORD: cool
+#    networks:
+#      local-network:
+#        ipv4_address: 192.168.55.3
+        
+  phpmyadmin:    
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-server
+    restart: always
+    ports:
+      - 8001:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_ABSOLUTE_URI=http://localhost/phpmyadmin
+#    networks:
+#      local-network:
+#        ipv4_address: 192.168.55.4
+
+  cache:
+    image: redis:latest
+    container_name: redis-cache
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+#    networks:
+#      local-network:
+#        ipv4_address: 192.168.55.5
+    
+  nginx:
+    build:
+      context: ../nginx-reverse-proxy
+    container_name: nginx_reverse_proxy
+    restart: always
+    ports:
+      - "80:80"
+#    networks:
+#      local-network:
+#        ipv4_address: 192.168.55.6
+
+
+         

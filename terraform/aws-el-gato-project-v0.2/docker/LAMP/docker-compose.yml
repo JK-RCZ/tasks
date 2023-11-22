@@ -18,8 +18,9 @@ services:
     container_name: phpmyadmin-server
     restart: always
     environment:
-      - PMA_HOST=xyz
+      - PMA_HOST=change_me
       - PMA_PORT=3306
+      - PMA_ABSOLUTE_URI=change_me
     
   cache:
     image: redis:latest

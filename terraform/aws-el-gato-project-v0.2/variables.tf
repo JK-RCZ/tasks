@@ -88,6 +88,7 @@ variable "ec2" {
         gather_rds_instance_data                 = bool
         rds_instance_name                        = string
         ssm_name                                 = string
+        load_balancer_name                       = string
       })
     })
 }
@@ -110,20 +111,6 @@ variable "load_balancer" {
 }
 
 variable "tg_80" {
-    description                                  = "Target group parameters"
-    type                                         = object({
-      tg_name                                    = string
-      tg_port                                    = string
-      tg_protocol                                = string
-      tg_target_type                             = string
-      listener_name                              = string
-      vpc_name                                   = string
-      instance_name                              = string
-      load_balancer_name                         = string
-    })
-}
-
-variable "tg_8001" {
     description                                  = "Target group parameters"
     type                                         = object({
       tg_name                                    = string
