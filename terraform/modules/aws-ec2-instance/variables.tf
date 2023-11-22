@@ -19,6 +19,7 @@ variable "ec2" {
         gather_rds_instance_data        = bool
         rds_instance_name               = string
         ssm_name                        = string
+        load_balancer_name              = string
       })
     })
 }

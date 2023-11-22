@@ -9,12 +9,14 @@ db_name=$(sed '1!d' /tmp/db_data.txt)
 db_user=$(sed '2!d' /tmp/db_data.txt)
 db_host=$(sed '3!d' /tmp/db_data.txt)
 db_pass=$(sed '4!d' /tmp/db_data.txt)
+lb_host=$(sed '5!d' /tmp/db_data.txt)
+
 docker_compose_file_path="/tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/docker-compose.yml"
 wordpress_image_script_path="/tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/wordpress/change-wp-config.sh"
 
 # Changes PhpMyAdmin database connection to db_host value
 sed -i "s|- PMA_HOST=.*$|- PMA_HOST=${db_host}|" ${docker_compose_file_path}
-rm /tasks/terraform/aws-el-gato-project-v0.2/db_host.txt
+sed -i "s|- PMA_ABSOLUTE_URI=.*$|- PMA_ABSOLUTE_URI=${lb_host}|" ${docker_compose_file_path}
 
 # Changes variables in wordpress image script
 sed -i "s|db_name=.*$|db_name=${db_name}|" ${wordpress_image_script_path}
