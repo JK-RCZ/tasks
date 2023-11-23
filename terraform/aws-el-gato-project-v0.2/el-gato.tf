@@ -43,20 +43,20 @@ module "private_root_table" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc, module.subnets, module.nat ]
 }
-/*
+
 module "rds" {
   source                                = "../modules/aws-rds"
   rds                                   = var.rds
   common_tags                           = var.common_tags
   depends_on                            = [ module.subnets, module.rds_security_group ]
 }
-*/
+
 module "ec2_1" {
   source                                = "../modules/aws-ec2-instance"
   ec2                                   = var.ec2
   common_tags                           = var.common_tags  
   public_key_contents                   = var.public_key_contents
-  depends_on                            = [ module.ec2_1_security_group, module.subnets, /*module.rds, */module.load_balancer ]
+  depends_on                            = [ module.ec2_1_security_group, module.subnets, module.rds, module.load_balancer ]
 }
 
 module "load_balancer" {
@@ -80,7 +80,7 @@ module "ec2_1_security_group" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
-/*
+
 module "rds_security_group" {
   source                                = "../modules/aws-security-group"
   security_group                        = var.sec_2
@@ -89,5 +89,5 @@ module "rds_security_group" {
   depends_on                            = [ module.vpc, module.ec2_1_security_group ]
   
 }
-*/
+
 
