@@ -16,7 +16,7 @@ wordpress_image_script_path="/tasks/terraform/aws-el-gato-project-v0.2/docker/LA
 
 # Changes PhpMyAdmin database connection to db_host value
 sed -i "s|- PMA_HOST=.*$|- PMA_HOST=${db_host}|" ${docker_compose_file_path}
-sed -i "s|- PMA_ABSOLUTE_URI=.*$|- PMA_ABSOLUTE_URI=${lb_host}|" ${docker_compose_file_path}
+sed -i "s|- PMA_ABSOLUTE_URI=.*$|- PMA_ABSOLUTE_URI=http://${lb_host}/phpmyadmin|" ${docker_compose_file_path}
 
 # Changes variables in wordpress image script
 sed -i "s|db_name=.*$|db_name=${db_name}|" ${wordpress_image_script_path}

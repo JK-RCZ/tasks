@@ -11,7 +11,7 @@ output "ENVIRONMENT" {
         module.load_balancer, 
         module.tg_80,
         module.ec2_1_security_group,
-        /*module.rds_security_group,
-        module.rds*/
+        module.rds_security_group,
+        module.rds
     ]
 }

@@ -25,6 +25,6 @@
     - name: Get Admin Password
       ansible.builtin.fetch: 
         src: /var/lib/jenkins/secrets/initialAdminPassword
-        dest: ~/projects/ansible/aws/SUSE/JenkinsAdminPass
+        dest: ~/JenkinsAdminPass
 
 
