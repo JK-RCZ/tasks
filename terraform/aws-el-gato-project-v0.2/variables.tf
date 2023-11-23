@@ -1,3 +1,4 @@
+
 variable "common_tags" {
     description                                  = "Tags suitable for all resources"
     type                                         = map
@@ -45,7 +46,6 @@ variable "nat" {
       nat_name                                   = list(string)
 
     })
-  
 }
 
 variable "route_table_igw" {
@@ -150,7 +150,7 @@ variable "rds" {
     })
 }
 
-variable "sec_1" {
+variable "security_1" {
     type                                         = object(
         {
             vpc_name                             = string
@@ -175,43 +175,41 @@ variable "sec_1" {
                     egress_cidr_blocks           = list(string)
             })
         })
-  
 }
 
-variable "sec_2" {
-    type                                         = object(
-        {
-            vpc_name                             = string
-            sg_name                              = string
-            sg_descritption                      = string
-            ingress                              = list(object(
-                {
-                    ingress_description          = string
-                    ingress_port                 = string
-                    ingress_protocol             = string
-                    ingress_cidr_blocks          = list(string)
-                    ingress_ipv6_cidr_blocks     = list(string)
-                    ingress_prefix_list_ids      = list(string)
-                    ingress_self                 = bool
-                }
-            ))
-            egress                               = object(
-                {
-                    egress_description           = string
-                    egress_port                  = string
-                    egress_protocol              = string
-                    egress_cidr_blocks           = list(string)
-            })
-        })
-  
-}
-
-variable "ingress_from_existent_security_groups_for_sec_1" {
+variable "allow_from_security_groups_1" {
     description                                  = "List of security groups from which traffic allowed"
     type                                         = list(string)
 }
 
-variable "ingress_from_existent_security_groups_for_sec_2" {
+variable "security_2" {
+    type                                         = object(
+        {
+            vpc_name                             = string
+            sg_name                              = string
+            sg_descritption                      = string
+            ingress                              = list(object(
+                {
+                    ingress_description          = string
+                    ingress_port                 = string
+                    ingress_protocol             = string
+                    ingress_cidr_blocks          = list(string)
+                    ingress_ipv6_cidr_blocks     = list(string)
+                    ingress_prefix_list_ids      = list(string)
+                    ingress_self                 = bool
+                }
+            ))
+            egress                               = object(
+                {
+                    egress_description           = string
+                    egress_port                  = string
+                    egress_protocol              = string
+                    egress_cidr_blocks           = list(string)
+            })
+        })
+}
+
+variable "allow_from_security_groups_2" {
     description                                  = "List of security groups from which traffic allowed"
     type                                         = list(string)
 }

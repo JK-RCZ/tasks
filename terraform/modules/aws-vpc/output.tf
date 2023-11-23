@@ -1,9 +1,9 @@
 
-output "VPC-Data" {
+output "vpc-data" {
     description  = "VPC main data"
     value        = {
-            Name = aws_vpc.thing.tags.Name
-            ID   = aws_vpc.thing.id
-            CIDR = aws_vpc.thing.cidr_block
+            name = aws_vpc.this.tags.Name
+            id   = aws_vpc.this.id
+            cidr = aws_vpc.this.cidr_block
     }
 }

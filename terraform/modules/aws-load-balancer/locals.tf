@@ -1,3 +1,4 @@
+
 locals {
   security_group_ids = [
     for i in var.load_balancer.security_group_names:

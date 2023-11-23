@@ -1,7 +1,6 @@
 #This module depends on Security Group and Subnets. 
 # Please set respective dependensies in root module!
 
-
 variable "load_balancer" {
     description                         = "Load balancer parameters"
     type                                = object({

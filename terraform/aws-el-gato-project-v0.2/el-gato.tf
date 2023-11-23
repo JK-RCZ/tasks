@@ -1,3 +1,4 @@
+
 module "vpc" {
   source                                = "../modules/aws-vpc"
   vpc                                   = {
@@ -75,16 +76,16 @@ module "tg_80" {
 
 module "ec2_1_security_group" {
   source                                = "../modules/aws-security-group"
-  security_group                        = var.sec_1
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_1
+  security_group                        = var.security_1
+  allow_from_security_groups = var.allow_from_security_groups_1
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
 
 module "rds_security_group" {
   source                                = "../modules/aws-security-group"
-  security_group                        = var.sec_2
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_2
+  security_group                        = var.security_2
+  allow_from_security_groups = var.allow_from_security_groups_2
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc, module.ec2_1_security_group ]
   

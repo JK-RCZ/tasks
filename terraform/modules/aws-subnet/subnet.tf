@@ -1,13 +1,7 @@
 # This module depends on VPC.
 # Please set respective dependensies in root module!
 
-data "aws_vpc" "data" {
-    tags                      = {
-      Name                    = var.subnets.vpc_name
-    }
-}
-
-resource "aws_subnet" "thing" {
+resource "aws_subnet" "this" {
     count                     = length(var.subnets.subnets_params)
     vpc_id                    = data.aws_vpc.data.id
     cidr_block                = var.subnets.subnets_params[count.index].cidr_block

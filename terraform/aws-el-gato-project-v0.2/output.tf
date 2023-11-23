@@ -1,5 +1,5 @@
 
-output "ENVIRONMENT" {
+output "environment" {
     value = [ 
         module.vpc, 
         module.subnets, 

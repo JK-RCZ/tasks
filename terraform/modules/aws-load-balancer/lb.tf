@@ -1,21 +1,7 @@
 #This module depends on Security Group and Subnets. 
 # Please set respective dependensies in root module!
 
-data "aws_security_group" "data" {
-    for_each                  = toset(var.load_balancer.security_group_names)
-    tags                      = {
-      Name                    = each.key
-    }
-}
-
-data "aws_subnet" "data" {
-    for_each                  = toset(var.load_balancer.subnet_names)
-    tags                      = {
-      Name                    = each.key
-    }
-}
-
-resource "aws_lb" "thing" {
+resource "aws_lb" "this" {
   name                        = var.load_balancer.load_balancer_name
   internal                    = var.load_balancer.internal_load_balancer
   load_balancer_type          = var.load_balancer.load_balancer_type

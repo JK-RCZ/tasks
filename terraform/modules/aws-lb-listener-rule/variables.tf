@@ -1,6 +1,5 @@
 # This module depends on Load Balancer Listener and Target Group.
 
-
 variable "listener_rule" {
     description                         = "Load balancer listener rule parameters"
     type                                = object({

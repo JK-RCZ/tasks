@@ -1,6 +1,7 @@
-output "Target-Group-Data" {
+
+output "target-group-data" {
     value    = {
-        Name = aws_lb_target_group.einz.name
-        ID   = aws_lb_target_group.einz.id
+        name = aws_lb_target_group.this.name
+        id   = aws_lb_target_group.this.id
     }
 }
