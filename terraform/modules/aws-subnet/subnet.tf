@@ -3,7 +3,7 @@
 
 resource "aws_subnet" "this" {
     count                     = length(var.subnets.subnets_params)
-    vpc_id                    = data.aws_vpc.data.id
+    vpc_id                    = data.aws_vpc.vpc_id.id
     cidr_block                = var.subnets.subnets_params[count.index].cidr_block
     map_public_ip_on_launch   = var.subnets.subnets_params[count.index].map_public_ip_on_launch
     availability_zone         = var.subnets.subnets_params[count.index].availability_zone

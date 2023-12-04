@@ -2,12 +2,12 @@
 # Please set respective dependensies in root module!
 
 resource "aws_lb_listener_rule" "this" {
-  listener_arn       = data.aws_lb_listener.data.arn
+  listener_arn       = data.aws_lb_listener.listener_arn.arn
   priority           = var.listener_rule.listener_rule_parameters.priority
 
   action {
     type             = var.listener_rule.listener_rule_parameters.action_type
-    target_group_arn = data.aws_lb_target_group.data.arn
+    target_group_arn = data.aws_lb_target_group.target_group_arn.arn
   }
 
   condition {

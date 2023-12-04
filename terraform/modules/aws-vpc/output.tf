@@ -1,5 +1,5 @@
 
-output "vpc-data" {
+output "vpc_data" {
     description  = "VPC main data"
     value        = {
             name = aws_vpc.this.tags.Name

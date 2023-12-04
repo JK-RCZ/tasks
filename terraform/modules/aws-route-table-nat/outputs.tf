@@ -1,4 +1,4 @@
-output "route-table-data" {
+output "route_table_data" {
    description         = "Route table main data"
     value              = [
         for i in range(length(var.route_table_nat.route_table_name)):

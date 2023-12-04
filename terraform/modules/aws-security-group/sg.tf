@@ -4,7 +4,7 @@
 resource "aws_security_group" "this" {
   name                         = var.security_group.sg_name
   description                  = var.security_group.sg_descritption
-  vpc_id                       = data.aws_vpc.data.id
+  vpc_id                       = data.aws_vpc.vpc_id.id
   
   dynamic "ingress" {
     for_each                   = toset(var.security_group.ingress)

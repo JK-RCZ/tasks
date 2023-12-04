@@ -1,4 +1,4 @@
-output "load-balancer-data" {
+output "load_balancer_data" {
    description   = "Load balancer main data"
     value        = {
         name     = aws_lb.this.name,

@@ -15,18 +15,18 @@ resource "aws_key_pair" "this" {
 resource "aws_instance" "this" {
   ami                         = var.ec2.instance_parameters.instance_ami
   instance_type               = var.ec2.instance_parameters.instance_type
-  subnet_id                   = data.aws_subnet.data.id
+  subnet_id                   = data.aws_subnet.subnet_id.id
   associate_public_ip_address = var.ec2.instance_parameters.associate_public_ip_address
   vpc_security_group_ids      = local.sg_ids
   key_name                    = aws_key_pair.this.key_name
   user_data                   = var.ec2.rds_instance_parameters.gather_rds_instance_data ? templatefile(
                                                                                               "${var.ec2.instance_parameters.user_data_path}", 
                                                                                                 {
-                                                                                                  db_name = data.aws_db_instance.data[0].db_name,
-                                                                                                  db_user = data.aws_db_instance.data[0].master_username,
-                                                                                                  db_host = data.aws_db_instance.data[0].address,       
-                                                                                                  db_pass = data.aws_ssm_parameter.data[0].value
-                                                                                                  lb_host = data.aws_lb.data[0].dns_name
+                                                                                                  db_name = data.aws_db_instance.db_credentials[0].db_name,
+                                                                                                  db_user = data.aws_db_instance.db_credentials[0].master_username,
+                                                                                                  db_host = data.aws_db_instance.db_credentials[0].address,       
+                                                                                                  db_pass = data.aws_ssm_parameter.db_password[0].value
+                                                                                                  lb_host = data.aws_lb.lb_dns_name[0].dns_name
                                                                                                 }
                                                                                             ) : "${file(var.ec2.instance_parameters.user_data_path)}"
   tags                        = merge(var.common_tags, {Name = "${var.ec2.instance_parameters.instance_name}"})

@@ -13,6 +13,7 @@ variable "listener_rule" {
         environment_parameters          = object({
           listener_name                 = string
           target_group_name             = string
+          load_balancer_name            = string
         })
     })
 }

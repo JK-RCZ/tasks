@@ -1,5 +1,5 @@
 
-output "instance-data" {
+output "instance_data" {
     description               = "Instance main data"
     value                     = {
         name                  = aws_instance.this.tags.Name,
