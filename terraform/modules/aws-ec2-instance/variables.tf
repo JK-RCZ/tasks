@@ -21,6 +21,11 @@ variable "ec2" {
         ssm_name                        = string
         load_balancer_name              = string
       })
+      instance_profile_parameters       = object({
+        create_instance_profile         = bool
+        instance_profile_name           = string
+        attach_role_name                = string
+      })
     })
 }
 

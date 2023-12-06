@@ -11,6 +11,11 @@ variable "vpc" {
       tenancy                                    = string
       cidr_block                                 = string
       name                                       = string
+      ebs_encryption_params                      = object({
+        enable_ebs_encryption                    = bool
+        deletion_window_in_days                  = string
+        customer_master_key_spec                 = string
+      })
     })
 }
 
@@ -89,6 +94,11 @@ variable "ec2" {
         rds_instance_name                        = string
         ssm_name                                 = string
         load_balancer_name                       = string
+      })
+      instance_profile_parameters                = object({
+        create_instance_profile                  = bool
+        instance_profile_name                    = string
+        attach_role_name                         = string
       })
     })
 }
@@ -214,3 +224,12 @@ variable "allow_from_security_groups_2" {
     type                                         = list(string)
 }
 
+variable "ssm_ec2_connect_role" {
+    description                                  = "Specify trusted entities policy file path and policies arns that you want to apply to this role"
+    type                                         = object({
+        iam_role_name                            = string
+        trusted_entities_policy_file_path        = string
+        policies_arn                             = list(string)
+    })
+  
+}
