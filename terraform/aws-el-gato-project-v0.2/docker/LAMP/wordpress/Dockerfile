@@ -20,7 +20,7 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && chmod 755 /var/www/localhost/htdocs/ \
     && echo "ServerName localhost" >> /etc/apache2/httpd.conf \
     && chmod 755 /tmp/change-wp-config.sh \
-    && cp /tmp/wp-config.php /var/www/localhost/htdocs/wp-config.php \
+    && cp -R /tmp/wp-config.php /var/www/localhost/htdocs/wp-config.php \
     && /tmp/change-wp-config.sh
 CMD ["apachectl", "-D", "FOREGROUND"]
 
