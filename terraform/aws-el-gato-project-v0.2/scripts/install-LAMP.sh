@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-echo "${db_name}" > /tmp/db_data.txt
-echo "${db_user}" >> /tmp/db_data.txt
-echo "${db_host}" >> /tmp/db_data.txt
-echo "${db_pass}" >> /tmp/db_data.txt
-echo "${lb_host}" >> /tmp/db_data.txt
+#echo "${db_name}" > /tmp/db_data.txt
+#echo "${db_user}" >> /tmp/db_data.txt
+#echo "${db_host}" >> /tmp/db_data.txt
+#echo "${db_pass}" >> /tmp/db_data.txt
+#echo "${lb_host}" >> /tmp/db_data.txt
 
 
 yum update
