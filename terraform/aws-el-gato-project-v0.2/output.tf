@@ -1,4 +1,4 @@
-/*
+
 output "environment" {
     value = [ 
         module.vpc, 
@@ -11,8 +11,10 @@ output "environment" {
         module.load_balancer, 
         module.target_group_port_80,
         module.ec2_1_security_group,
-        module.rds_security_group,
-        module.rds
+        /*module.rds_security_group,
+        module.rds*/
+        module.ec2_role,
+        module.s3_backup
     ]
 }
-*/
+

@@ -16,5 +16,5 @@ systemctl start docker
 git clone --branch staging https://github.com/JK-RCZ/tasks.git
 #usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-config.sh
 rm /tmp/db_data.txt
-cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/test #delete "/test"
+cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/test/ #delete "/test"
 docker-compose up -d
