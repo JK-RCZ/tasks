@@ -13,8 +13,8 @@ yum install -y docker
 curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 systemctl start docker
-git clone https://github.com/JK-RCZ/tasks.git
+git clone --branch staging https://github.com/JK-RCZ/tasks.git
 /usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-config.sh
 rm /tmp/db_data.txt
-cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/
+cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/test
 docker-compose up -d

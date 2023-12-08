@@ -9,6 +9,7 @@ RUN apk update && apk upgrade && apk add \
     php82-apache2 \
     redis
 COPY change-wp-config.sh /tmp/change-wp-config.sh
+COPY wp-config.php /tmp/wp-config.php
 RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && wget https://wordpress.org/latest.tar.gz \
     && tar -xzvf latest.tar.gz \
@@ -19,6 +20,7 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && chmod 755 /var/www/localhost/htdocs/ \
     && echo "ServerName localhost" >> /etc/apache2/httpd.conf \
     && chmod 755 /tmp/change-wp-config.sh \
+    && cp /tmp/wp-config.php /var/www/localhost/htdocs/wp-config.php \
     && /tmp/change-wp-config.sh
 CMD ["apachectl", "-D", "FOREGROUND"]
 

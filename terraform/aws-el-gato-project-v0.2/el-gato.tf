@@ -45,6 +45,7 @@ module "private_root_table" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc, module.subnets, module.nat ]
 }
+
 /*
 module "rds" {
   source                                = "../modules/aws-rds"
@@ -53,6 +54,7 @@ module "rds" {
   depends_on                            = [ module.subnets, module.rds_security_group ]
 }
 */
+
 module "ec2_1" {
   source                                = "../modules/aws-ec2-instance"
   ec2                                   = var.ec2
@@ -82,6 +84,7 @@ module "ec2_1_security_group" {
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
+
 /*
 module "rds_security_group" {
   source                                = "../modules/aws-security-group"
@@ -91,8 +94,14 @@ module "rds_security_group" {
   depends_on                            = [ module.vpc, module.ec2_1_security_group ]
 }
 */
-module "ssm-ec2-connection-role" {
+module "ec2_role" {
   source                                = "../modules/aws-iam-role"
-  iam_role                              = var.ssm_ec2_connect_role
+  iam_role                              = var.ec2_role
   common_tags                           = var.common_tags  
+}
+
+module "s3_backup" {
+  source = "../modules/aws-s3-bucket"
+  s3_bucket = var.s3_bucket
+  common_tags = var.common_tags
 }

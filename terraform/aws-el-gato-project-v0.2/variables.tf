@@ -224,7 +224,7 @@ variable "allow_from_security_groups_2" {
     type                                         = list(string)
 }
 
-variable "ssm_ec2_connect_role" {
+variable "ec2_role" {
     description                                  = "Specify trusted entities policy file path and policies arns that you want to apply to this role"
     type                                         = object({
         iam_role_name                            = string
@@ -232,4 +232,22 @@ variable "ssm_ec2_connect_role" {
         policies_arn                             = list(string)
     })
   
+}
+
+variable "s3_bucket" {
+    description                                  = "S3 bucket parameters"
+    type                                         = object({
+      bucket_name                                = string
+      s3_encryption_params                       = object({
+        enble_encryption                         = bool
+        deletion_window_in_days                  = string
+        customer_master_key_spec                 = string
+      })
+      s3_intelligent_tiering_params              = object({
+        enable_intelligent_tiering               = bool
+        intelligent_tiering_config_name          = string  
+        days_after_deep_archive_access_allowed   = string
+        days_after_archive_access_allowed        = string
+      })
+    })
 }
