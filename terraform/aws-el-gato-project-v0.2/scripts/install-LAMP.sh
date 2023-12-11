@@ -18,3 +18,5 @@ git clone --branch staging https://github.com/JK-RCZ/tasks.git
 #rm /tmp/db_data.txt
 cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/test/ #delete "/test"
 docker-compose up -d
+#docker-compose stop
+#docker-compose up -d
