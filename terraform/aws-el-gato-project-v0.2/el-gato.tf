@@ -60,7 +60,7 @@ module "ec2_1" {
   ec2                                   = var.ec2
   common_tags                           = var.common_tags  
   public_key_contents                   = var.public_key_contents
-  depends_on                            = [ module.ec2_1_security_group, module.subnets, /*module.rds, */module.load_balancer ]
+  depends_on                            = [ module.ec2_1_security_group, module.subnets, /*module.rds, */module.load_balancer, module.ec2_role ]
 }
 
 module "load_balancer" {
@@ -97,11 +97,18 @@ module "rds_security_group" {
 module "ec2_role" {
   source                                = "../modules/aws-iam-role"
   iam_role                              = var.ec2_role
-  common_tags                           = var.common_tags  
+  common_tags                           = var.common_tags 
+  depends_on = [ module.ssm_s3_kms_policy ] 
 }
 
 module "s3_backup" {
   source = "../modules/aws-s3-bucket"
   s3_bucket = var.s3_bucket
+  common_tags = var.common_tags
+}
+
+module "ssm_s3_kms_policy" {
+  source = "../modules/aws-policy"
+  iam_policy = var.iam_policy
   common_tags = var.common_tags
 }

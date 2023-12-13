@@ -23,7 +23,7 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "this" {
   count                    = var.s3_bucket.s3_intelligent_tiering_params.enable_intelligent_tiering ? 1 : 0
   bucket                   = aws_s3_bucket.this.id
   name                     = var.s3_bucket.s3_intelligent_tiering_params.intelligent_tiering_config_name
-
+  
   tiering {
     access_tier            = "DEEP_ARCHIVE_ACCESS"
     days                   = var.s3_bucket.s3_intelligent_tiering_params.days_after_deep_archive_access_allowed

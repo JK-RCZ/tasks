@@ -1,4 +1,4 @@
-# This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable).
+# This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable), IAM Role (if applicapable).
 # Please set respective dependensies in root module!
 
 variable "ec2" {
@@ -18,7 +18,7 @@ variable "ec2" {
       rds_instance_parameters           = object({
         gather_rds_instance_data        = bool
         rds_instance_name               = string
-        ssm_name                        = string
+        ssm_key_name                    = string
         load_balancer_name              = string
       })
       instance_profile_parameters       = object({

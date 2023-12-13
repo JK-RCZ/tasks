@@ -92,7 +92,7 @@ variable "ec2" {
       rds_instance_parameters                    = object({
         gather_rds_instance_data                 = bool
         rds_instance_name                        = string
-        ssm_name                                 = string
+        ssm_key_name                             = string
         load_balancer_name                       = string
       })
       instance_profile_parameters                = object({
@@ -229,7 +229,7 @@ variable "ec2_role" {
     type                                         = object({
         iam_role_name                            = string
         trusted_entities_policy_file_path        = string
-        policies_arn                             = list(string)
+        policy_name                              = string
     })
   
 }
@@ -249,5 +249,14 @@ variable "s3_bucket" {
         days_after_deep_archive_access_allowed   = string
         days_after_archive_access_allowed        = string
       })
+    })
+}
+
+variable "iam_policy" {
+    description                                  = "IAM policy main parameters"
+    type                                         = object({
+      policy_name                                = string
+      policy_path                                = string
+      policy_json_file_path                      = string
     })
 }

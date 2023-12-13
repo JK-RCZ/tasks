@@ -21,7 +21,7 @@ data "aws_db_instance" "db_credentials" {
 
 data "aws_ssm_parameter" "db_password" {
   count                       = var.ec2.rds_instance_parameters.gather_rds_instance_data ? 1 : 0
-  name                        = var. ec2.rds_instance_parameters.ssm_name
+  name                        = var. ec2.rds_instance_parameters.ssm_key_name
 }
 
 data "aws_lb" "lb_dns_name" {

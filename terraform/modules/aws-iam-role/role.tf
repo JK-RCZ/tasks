@@ -1,3 +1,9 @@
+# This module depends on IAM Policy.
+# Please set respective dependensies in root module!
+
+data "aws_iam_policy" "iam_policy_arn" {
+  name = var.iam_role.policy_name
+}
 
 resource "aws_iam_role" "this" {
     name               = var.iam_role.iam_role_name
@@ -6,7 +12,6 @@ resource "aws_iam_role" "this" {
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-    count              = length(var.iam_role.policies_arn)
     role               = aws_iam_role.this.name
-    policy_arn         = var.iam_role.policies_arn[count.index]
+    policy_arn         = data.aws_iam_policy.iam_policy_arn.arn
 }
