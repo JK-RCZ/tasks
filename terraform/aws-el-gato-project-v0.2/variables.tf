@@ -76,29 +76,31 @@ variable "route_table_nat" {
 }
 
 variable "ec2" {
-    description                                  = "EC2 and assotiated security group parameters"
-    type                                         = object({
-      public_key_name                            = string
-      instance_parameters                        = object(
+    description                         = "EC2, assotiated security group and RDS instance parameters"
+    type                                = object({
+      public_key_name                   = string
+      instance_parameters               = object(
         {
-            instance_name                        = string
-            instance_ami                         = string
-            instance_type                        = string
-            subnet_name                          = string
-            associate_public_ip_address          = bool
-            user_data_path                       = string
-            security_group_names                 = list(string)
+            instance_name               = string
+            instance_ami                = string
+            instance_type               = string
+            volume_path                 = string
+            volume_size_gb              = string
+            subnet_name                 = string
+            associate_public_ip_address = bool
+            user_data_path              = string
+            security_group_names        = list(string)
         })
-      rds_instance_parameters                    = object({
-        gather_rds_instance_data                 = bool
-        rds_instance_name                        = string
-        ssm_key_name                             = string
-        load_balancer_name                       = string
+      rds_instance_parameters           = object({
+        gather_rds_instance_data        = bool
+        rds_instance_name               = string
+        ssm_key_name                    = string
+        load_balancer_name              = string
       })
-      instance_profile_parameters                = object({
-        create_instance_profile                  = bool
-        instance_profile_name                    = string
-        attach_role_name                         = string
+      instance_profile_parameters       = object({
+        create_instance_profile         = bool
+        instance_profile_name           = string
+        attach_role_name                = string
       })
     })
 }

@@ -10,6 +10,8 @@ variable "ec2" {
             instance_name               = string
             instance_ami                = string
             instance_type               = string
+            volume_path                 = string
+            volume_size_gb              = string
             subnet_name                 = string
             associate_public_ip_address = bool
             user_data_path              = string

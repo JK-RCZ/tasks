@@ -38,3 +38,15 @@ resource "aws_instance" "this" {
                                                                                             ) : "${file(var.ec2.instance_parameters.user_data_path)}"
   tags                        = merge(var.common_tags, {Name = "${var.ec2.instance_parameters.instance_name}"})
 }
+
+resource "aws_ebs_volume" "this" {
+  availability_zone = aws_instance.this.availability_zone
+  size              = var.ec2.instance_parameters.volume_size_gb
+  tags                        = merge(var.common_tags, {Name = "${var.ec2.instance_parameters.instance_name}"})
+}
+
+resource "aws_volume_attachment" "this" {
+  device_name = var.ec2.instance_parameters.volume_path
+  volume_id   = aws_ebs_volume.this.id
+  instance_id = aws_instance.this.id
+}
