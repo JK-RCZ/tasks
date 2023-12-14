@@ -59,7 +59,7 @@ module "ec2_1" {
   ec2                                   = var.ec2
   common_tags                           = var.common_tags  
   public_key_contents                   = var.public_key_contents
-  depends_on                            = [ module.ec2_1_security_group, module.subnets, /*module.rds, */module.load_balancer, module.ec2_role ]
+  depends_on                            = [ module.ec2_1_security_group, module.subnets, module.rds, module.load_balancer, module.ec2_role ]
 }
 
 module "load_balancer" {
