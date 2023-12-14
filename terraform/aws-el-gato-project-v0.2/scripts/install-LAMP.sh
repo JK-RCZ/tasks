@@ -17,9 +17,7 @@ systemctl start docker
 systemctl start crond.service
 git clone --branch staging https://github.com/JK-RCZ/tasks.git
 echo "*/30 * * * * root /tasks/terraform/aws-el-gato-project-v0.2/scripts/push-to-s3.sh" >> /etc/crontab
-#usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-config.sh
-#rm /tmp/db_data.txt
-cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/test/ #delete "/test"
+usr/bin/bash  /tasks/terraform/aws-el-gato-project-v0.2/scripts/change-config.sh
+rm /tmp/db_data.txt
+cd /tasks/terraform/aws-el-gato-project-v0.2/docker/LAMP/ #test/ #delete "/test"
 docker-compose up -d
-#docker-compose stop
-#docker-compose up -d
