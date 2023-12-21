@@ -1,3 +1,7 @@
+# This module asks for PUBLIC KEY. 
+# Do not describe public_key_contents variable in tfvars file, so you can enter it safely either on prompt after terraform plan/apply command or 
+# add it to terraform enviroment variable before the launch by command: export TF_VAR_public_key_contents='your public key'
+
 # This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable), IAM Role (if applicapable).
 # Please set respective dependensies in root module!
 

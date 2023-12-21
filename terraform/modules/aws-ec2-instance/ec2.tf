@@ -6,6 +6,7 @@
 # Please set respective dependensies in root module!
 
 resource "aws_key_pair" "this" {
+  count = var.ec2.instance_profile_parameters.create_instance_profile ? 0 : 1
   key_name                    = var.ec2.public_key_name
   public_key                  = var.public_key_contents
 
@@ -25,7 +26,7 @@ resource "aws_instance" "this" {
   associate_public_ip_address = var.ec2.instance_parameters.associate_public_ip_address
   vpc_security_group_ids      = local.sg_ids
   iam_instance_profile        = var.ec2.instance_profile_parameters.create_instance_profile ? aws_iam_instance_profile.this[0].name : null
-  key_name                    = aws_key_pair.this.key_name
+  key_name                    = var.ec2.instance_profile_parameters.create_instance_profile ? null : aws_key_pair.this[0].key_name
   user_data                   = var.ec2.rds_instance_parameters.gather_rds_instance_data ? templatefile(
                                                                                               "${var.ec2.instance_parameters.user_data_path}", 
                                                                                                 {

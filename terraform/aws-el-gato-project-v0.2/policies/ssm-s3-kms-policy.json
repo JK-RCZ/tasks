@@ -67,7 +67,7 @@
         {
 			"Sid": "VisualEditor0",
 			"Effect": "Allow",
-			"Action": "s3:PutObject",
+			"Action": "s3:*",
 			"Resource": "*"
 		},
         { 
