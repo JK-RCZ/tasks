@@ -9,6 +9,7 @@ echo "${lb_host}" >> /tmp/db_data.txt
 
 yum update
 yum install -y git
+sleep 1
 yum install -y docker
 yum install -y cronie
 yum install -y mariadb105.x86_64
