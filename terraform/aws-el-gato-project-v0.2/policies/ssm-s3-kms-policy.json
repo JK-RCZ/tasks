@@ -2,80 +2,59 @@
     "Version": "2012-10-17",
     "Statement": [
         {
+            "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "ssm:DescribeDocument",
+                "kms:Decrypt",
+                "tag:GetResources",
+                "ec2messages:GetEndpoint",
+                "ssmmessages:OpenControlChannel",
+                "ec2messages:GetMessages",
+                "ssm:PutConfigurePackageResult",
+                "ssm:ListInstanceAssociations",
+                "ssm:GetParameter",
+                "ssm:UpdateAssociationStatus",
+                "ssm:GetManifest",
+                "ec2messages:DeleteMessage",
+                "ssm:UpdateInstanceInformation",
+                "ec2messages:FailMessage",
+                "ssmmessages:OpenDataChannel",
+                "ssm:GetDocument",
+                "ssm:PutComplianceItems",
                 "ssm:DescribeAssociation",
                 "ssm:GetDeployablePatchSnapshotForInstance",
-                "ssm:GetDocument",
-                "ssm:DescribeDocument",
-                "ssm:GetManifest",
-                "ssm:GetParameter",
+                "ec2messages:AcknowledgeMessage",
+                "ssm:DescribePatchBaselines",
                 "ssm:GetParameters",
-                "ssm:ListAssociations",
-                "ssm:ListInstanceAssociations",
-                "ssm:PutInventory",
-                "ssm:PutComplianceItems",
-                "ssm:PutConfigurePackageResult",
-                "ssm:UpdateAssociationStatus",
-                "ssm:UpdateInstanceAssociationStatus",
-                "ssm:UpdateInstanceInformation"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
                 "ssmmessages:CreateControlChannel",
                 "ssmmessages:CreateDataChannel",
-                "ssmmessages:OpenControlChannel",
-                "ssmmessages:OpenDataChannel"
+                "ssm:PutInventory",
+                "kms:GenerateDataKey",
+                "ec2messages:SendReply",
+                "ssm:ListAssociations",
+                "ssm:UpdateInstanceAssociationStatus",
+                "s3:GetObject"
             ],
             "Resource": "*"
         },
         {
-            "Effect": "Allow",
-            "Action": [
-                "ec2messages:AcknowledgeMessage",
-                "ec2messages:DeleteMessage",
-                "ec2messages:FailMessage",
-                "ec2messages:GetEndpoint",
-                "ec2messages:GetMessages",
-                "ec2messages:SendReply"
-            ],
-            "Resource": "*"
-        },
-        {
+            "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": "ssm:DescribeEffectivePatchesForPatchBaseline",
             "Resource": "arn:aws:ssm:*:*:patchbaseline/*"
         },
         {
+            "Sid": "VisualEditor2",
             "Effect": "Allow",
             "Action": "ssm:GetPatchBaseline",
             "Resource": "arn:aws:ssm:*:*:patchbaseline/*"
         },
         {
+            "Sid": "VisualEditor3",
             "Effect": "Allow",
-            "Action": "tag:GetResources",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "ssm:DescribePatchBaselines",
-            "Resource": "*"
-        },
-        {
-			"Sid": "VisualEditor0",
-			"Effect": "Allow",
-			"Action": "s3:*",
-			"Resource": "*"
-		},
-        { 
-
-			"Sid": "VisualEditor1",
-			"Effect": "Allow",
-			"Action": "kms:GenerateDataKey",
-			"Resource": "*"
-		}
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::lil-pretty-bucket"
+        }
     ]
 }
