@@ -7,8 +7,12 @@ RUN apk update && apk upgrade && apk add \
     php82-mysqli \
     mariadb-client \
     php82-apache2 \
-    redis
+    redis \
+    curl
 COPY change-wp-config.sh /tmp/change-wp-config.sh
+COPY wp-config.php /tmp/wp-config.php
+COPY generate-wp-errors.sh /etc/periodic/15min/generate-wp-errors.sh
+COPY mysql-dump.sh /etc/periodic/15min/mysql-dump.sh
 RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && wget https://wordpress.org/latest.tar.gz \
     && tar -xzvf latest.tar.gz \
@@ -19,6 +23,8 @@ RUN mkdir -p /usr/share/webapps/ && cd /usr/share/webapps/ \
     && chmod 755 /var/www/localhost/htdocs/ \
     && echo "ServerName localhost" >> /etc/apache2/httpd.conf \
     && chmod 755 /tmp/change-wp-config.sh \
-    && /tmp/change-wp-config.sh
-CMD ["apachectl", "-D", "FOREGROUND"]
+    && chmod 755 /etc/periodic/15min/generate-wp-errors.sh \
+    && chmod 755 /etc/periodic/15min/mysql-dump.sh \
+    && /tmp/change-wp-config.sh 
+CMD ( crond -f -l 8 & ) && httpd -D FOREGROUND
 

@@ -1,8 +1,8 @@
-output "Security-Group-Data" {
+
+output "security-group-data" {
     description               = "Security group main data"
     value                     = {
-        Name                  = aws_security_group.thing.tags.Name
-        ID                    = aws_security_group.thing.id
-
+        name                  = aws_security_group.this.tags.Name
+        id                    = aws_security_group.this.id
     }
 }

@@ -13,9 +13,6 @@
 #        root_table_name = ["route 1", "route 2"], ... "route N"]  
 #                nat_name = ["NAT 1",  "NAT 2",  ...  "NAT N"]
 
-
-
-
 variable "route_table_nat" {
     description                                  = "This root table uses NAT(s) as default target!"
     type                                         = object({

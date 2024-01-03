@@ -1,4 +1,8 @@
-# This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable).
+# This module asks for PUBLIC KEY. 
+# Do not describe public_key_contents variable in tfvars file, so you can enter it safely either on prompt after terraform plan/apply command or 
+# add it to terraform enviroment variable before the launch by command: export TF_VAR_public_key_contents='your public key'
+
+# This module depends on Subnets, Security Groups, RDS Instance (if applicapable), SSM Parameter (if applicapable), IAM Role (if applicapable).
 # Please set respective dependensies in root module!
 
 variable "ec2" {
@@ -10,6 +14,8 @@ variable "ec2" {
             instance_name               = string
             instance_ami                = string
             instance_type               = string
+            volume_path                 = string
+            volume_size_gb              = string
             subnet_name                 = string
             associate_public_ip_address = bool
             user_data_path              = string
@@ -18,8 +24,13 @@ variable "ec2" {
       rds_instance_parameters           = object({
         gather_rds_instance_data        = bool
         rds_instance_name               = string
-        ssm_name                        = string
+        ssm_key_name                    = string
         load_balancer_name              = string
+      })
+      instance_profile_parameters       = object({
+        create_instance_profile         = bool
+        instance_profile_name           = string
+        attach_role_name                = string
       })
     })
 }

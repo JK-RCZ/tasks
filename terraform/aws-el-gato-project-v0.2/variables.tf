@@ -1,3 +1,4 @@
+
 variable "common_tags" {
     description                                  = "Tags suitable for all resources"
     type                                         = map
@@ -10,6 +11,11 @@ variable "vpc" {
       tenancy                                    = string
       cidr_block                                 = string
       name                                       = string
+      ebs_encryption_params                      = object({
+        enable_ebs_encryption                    = bool
+        deletion_window_in_days                  = string
+        customer_master_key_spec                 = string
+      })
     })
 }
 
@@ -45,7 +51,6 @@ variable "nat" {
       nat_name                                   = list(string)
 
     })
-  
 }
 
 variable "route_table_igw" {
@@ -71,24 +76,31 @@ variable "route_table_nat" {
 }
 
 variable "ec2" {
-    description                                  = "EC2 and assotiated security group parameters"
-    type                                         = object({
-      public_key_name                            = string
-      instance_parameters                        = object(
+    description                         = "EC2, assotiated security group and RDS instance parameters"
+    type                                = object({
+      public_key_name                   = string
+      instance_parameters               = object(
         {
-            instance_name                        = string
-            instance_ami                         = string
-            instance_type                        = string
-            subnet_name                          = string
-            associate_public_ip_address          = bool
-            user_data_path                       = string
-            security_group_names                 = list(string)
+            instance_name               = string
+            instance_ami                = string
+            instance_type               = string
+            volume_path                 = string
+            volume_size_gb              = string
+            subnet_name                 = string
+            associate_public_ip_address = bool
+            user_data_path              = string
+            security_group_names        = list(string)
         })
-      rds_instance_parameters                    = object({
-        gather_rds_instance_data                 = bool
-        rds_instance_name                        = string
-        ssm_name                                 = string
-        load_balancer_name                       = string
+      rds_instance_parameters           = object({
+        gather_rds_instance_data        = bool
+        rds_instance_name               = string
+        ssm_key_name                    = string
+        load_balancer_name              = string
+      })
+      instance_profile_parameters       = object({
+        create_instance_profile         = bool
+        instance_profile_name           = string
+        attach_role_name                = string
       })
     })
 }
@@ -150,7 +162,7 @@ variable "rds" {
     })
 }
 
-variable "sec_1" {
+variable "security_1" {
     type                                         = object(
         {
             vpc_name                             = string
@@ -175,10 +187,14 @@ variable "sec_1" {
                     egress_cidr_blocks           = list(string)
             })
         })
-  
 }
 
-variable "sec_2" {
+variable "allow_from_security_groups_1" {
+    description                                  = "List of security groups from which traffic allowed"
+    type                                         = list(string)
+}
+
+variable "security_2" {
     type                                         = object(
         {
             vpc_name                             = string
@@ -203,16 +219,47 @@ variable "sec_2" {
                     egress_cidr_blocks           = list(string)
             })
         })
+}
+
+variable "allow_from_security_groups_2" {
+    description                                  = "List of security groups from which traffic allowed"
+    type                                         = list(string)
+}
+
+variable "ec2_role" {
+    description                                  = "Specify trusted entities policy file path and policies arns that you want to apply to this role"
+    type                                         = object({
+        iam_role_name                            = string
+        trusted_entities_policy_file_path        = string
+        policy_name                              = string
+    })
   
 }
 
-variable "ingress_from_existent_security_groups_for_sec_1" {
-    description                                  = "List of security groups from which traffic allowed"
-    type                                         = list(string)
+variable "s3_bucket" {
+    description                                  = "S3 bucket parameters"
+    type                                         = object({
+      bucket_name                                = string
+      bucket_versioning                          = string 
+      s3_encryption_params                       = object({
+        enble_encryption                         = bool
+        deletion_window_in_days                  = string
+        customer_master_key_spec                 = string
+      })
+      s3_intelligent_tiering_params              = object({
+        enable_intelligent_tiering               = bool
+        intelligent_tiering_config_name          = string  
+        days_after_deep_archive_access_allowed   = string
+        days_after_archive_access_allowed        = string
+      })
+    })
 }
 
-variable "ingress_from_existent_security_groups_for_sec_2" {
-    description                                  = "List of security groups from which traffic allowed"
-    type                                         = list(string)
+variable "iam_policy" {
+    description                                  = "IAM policy main parameters"
+    type                                         = object({
+      policy_name                                = string
+      policy_path                                = string
+      policy_json_file_path                      = string
+    })
 }
-

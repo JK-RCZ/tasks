@@ -1,10 +1,10 @@
-output "Route-Table-Data" {
+output "route_table_data" {
    description         = "Route table main data"
     value              = [
         for i in range(length(var.route_table_nat.route_table_name)):
             {
-                Name   = aws_route_table.uno[i].tags.Name
-                ID     = aws_route_table.uno[i].id
+                name   = aws_route_table.this[i].tags.Name
+                id     = aws_route_table.this[i].id
             }
     ]        
 }

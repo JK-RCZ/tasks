@@ -30,8 +30,8 @@ variable "security_group" {
   
 }
 
-variable "ingress_from_existent_security_groups" {
-    description                                  = "List of security groups from which traffic allowed"
+variable "allow_from_security_groups" {
+    description                                  = "List of security groups from which traffic will be allowed"
     type                                         = list(string)
 }
 

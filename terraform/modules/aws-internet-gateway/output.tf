@@ -1,8 +1,9 @@
-output "Internet-Gateway-Data" {
+
+output "internet_gateway_data" {
     description = "Internet Gateway main data"
-    value = {
-        Name = aws_internet_gateway.thing.tags.Name,
-        ID =  aws_internet_gateway.thing.id,
-        VPC-ID = aws_internet_gateway.thing.vpc_id
+    value       = {
+        name    = aws_internet_gateway.this.tags.Name,
+        id      =  aws_internet_gateway.this.id,
+        vpc_id  = aws_internet_gateway.this.vpc_id
     }
 }

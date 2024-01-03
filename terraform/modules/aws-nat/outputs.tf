@@ -1,29 +1,29 @@
-output "Elastic-IP-Data" {
+
+output "elastic_ip_data" {
    description                          = "Elastic IP main data"
    value                                = [
         for i in range(length(var.nat.private_subnet_name)):
             [
                 {
-                    Name                = aws_eip.uno[i].tags.Name,
-                    Subnet-associations = aws_eip.uno[i].associate_with_private_ip,
-                    Public-IP           = aws_eip.uno[i].public_ip,
-                    ID                  = aws_eip.uno[i].id
+                    name                = aws_eip.this[i].tags.Name,
+                    subnet_associations = aws_eip.this[i].associate_with_private_ip,
+                    public_ip           = aws_eip.this[i].public_ip,
+                    id                  = aws_eip.this[i].id
                 }
             ]
    ]
 }
 
-
-output "NAT-Data" {
+output "nat_data" {
    description              = "NAT main data"
     value                   = [
         for i in range(length(var.nat.private_subnet_name)):
             [
                 {
-                    Name                = aws_nat_gateway.due[i].tags.Name,
-                    Public_IP           = aws_nat_gateway.due[i].public_ip,
-                    Subnet-ID           = aws_nat_gateway.due[i].subnet_id,
-                    ID                  = aws_nat_gateway.due[i].id
+                    name                = aws_nat_gateway.this[i].tags.Name,
+                    public_ip           = aws_nat_gateway.this[i].public_ip,
+                    subnet_ip           = aws_nat_gateway.this[i].subnet_id,
+                    id                  = aws_nat_gateway.this[i].id
                 }
             ]
     ]            

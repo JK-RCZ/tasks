@@ -1,29 +1,13 @@
 # This module depends on Load Balancer Listener and Target Group.
 # Please set respective dependensies in root module!
 
-data "aws_lb_listener" "data" {
-    load_balancer_arn = data.aws_lb.data.arn
-    port = data.aws_lb_target_group.data.port
-    tags             = {
-      Name           = var.listener_rule.environment_parameters.listener_name
-    }
-  depends_on = [ data.aws_lb.data, data.aws_lb_target_group.data ]
-}
-
-data "aws_lb_target_group" "data" {
-    tags             = {
-      Name           = var.listener_rule.environment_parameters.target_group_name
-    }
-  
-}
-
-resource "aws_lb_listener_rule" "thing" {
-  listener_arn       = data.aws_lb_listener.data.arn
+resource "aws_lb_listener_rule" "this" {
+  listener_arn       = data.aws_lb_listener.listener_arn.arn
   priority           = var.listener_rule.listener_rule_parameters.priority
 
   action {
     type             = var.listener_rule.listener_rule_parameters.action_type
-    target_group_arn = data.aws_lb_target_group.data.arn
+    target_group_arn = data.aws_lb_target_group.target_group_arn.arn
   }
 
   condition {

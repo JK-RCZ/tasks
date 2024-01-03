@@ -1,25 +1,10 @@
 # This module depends on VPC and Security groups(if inbound traffic alloud only from existing security groups).
 # Please set respective dependensies in root module!
 
-
-data "aws_vpc" "data" {
-    tags                       = {
-      Name                     = var.security_group.vpc_name
-    }
-  
-}
-
-data "aws_security_group" "data" {
-    for_each                   = toset(var.ingress_from_existent_security_groups)
-    tags                       = {
-      Name                     = each.key
-    }
-}
-
-resource "aws_security_group" "thing" {
+resource "aws_security_group" "this" {
   name                         = var.security_group.sg_name
   description                  = var.security_group.sg_descritption
-  vpc_id                       = data.aws_vpc.data.id
+  vpc_id                       = data.aws_vpc.vpc_id.id
   
   dynamic "ingress" {
     for_each                   = toset(var.security_group.ingress)

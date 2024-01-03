@@ -1,8 +1,8 @@
-output "Load-Balancer-Data" {
+output "load_balancer_data" {
    description   = "Load balancer main data"
     value        = {
-        Name     = aws_lb.thing.name,
-        DNS_name = aws_lb.thing.dns_name,
-        ID       = aws_lb.thing.id
+        name     = aws_lb.this.name,
+        dns_name = aws_lb.this.dns_name,
+        id       = aws_lb.this.id
     }
 }
