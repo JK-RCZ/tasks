@@ -79,8 +79,7 @@ route_table_nat                                        = {
 }
 
 ec2                                                    = {
-  public_key_name                                      = "aws-lamp"
-  vpc_name                                             = "el-gato-vpc"
+  public_key_name                                      = "pubkey"
   instance_parameters                                  = {
     instance_name                                      = "Instance 1"
     instance_ami                                       = "ami-0b6384181e01b87fb" # Amazon-Linux
@@ -153,10 +152,15 @@ security_1                                             = {
   vpc_name                                             = "el-gato-vpc"
   sg_name                                              = "Sec 1"
   sg_descritption                                      = "Allow 80, 8001 inbound from 0.0.0.0/0, allow all outbound to 0.0.0.0/0"
+  traffic_from_security_groups_only                    = {
+      allow_traffic                                    = false
+      security_groups_names                            = []
+  }
   ingress                                              = [ 
     {
       ingress_description                              = "allow all port 80"
-      ingress_port                                     = "80"
+      ingress_from_port                                = "80"
+      ingress_to_port                                  = "80"
       ingress_protocol                                 = "tcp"
       ingress_cidr_blocks                              = [ "0.0.0.0/0" ]
       ingress_ipv6_cidr_blocks                         = []
@@ -165,7 +169,8 @@ security_1                                             = {
     },
     {
       ingress_description                              = "allow all port 8001"
-      ingress_port                                     = "8001"
+      ingress_from_port                                = "8001"
+      ingress_to_port                                  = "8001"
       ingress_protocol                                 = "tcp"
       ingress_cidr_blocks                              = [ "0.0.0.0/0" ]
       ingress_ipv6_cidr_blocks                         = []
@@ -185,10 +190,15 @@ security_2                                             = {
   vpc_name                                             = "el-gato-vpc"
   sg_name                                              = "Sec 2"
   sg_descritption                                      = "Allow 3306 inbound from security group sec_1, deny all outbound"
+  traffic_from_security_groups_only                    = {
+      allow_traffic                                    = true
+      security_groups_names                            = ["Sec 1"]
+  }
   ingress                                              = [ 
     {
       ingress_description                              = "allow port 3306 from sec_1"
-      ingress_port                                     = "3306"
+      ingress_from_port                                = "3306"
+      ingress_to_port                                  = "3306"
       ingress_protocol                                 = "tcp"
       ingress_cidr_blocks                              = []
       ingress_ipv6_cidr_blocks                         = []
@@ -203,9 +213,6 @@ security_2                                             = {
       egress_cidr_blocks                               = []
   }
 }
-
-allow_from_security_groups_1                           = []
-allow_from_security_groups_2                           = [ "Sec 1" ]
 
 iam_policy = {
   policy_name = "allow-ec2ssm-s3putobject-kmsgeneratekey"
