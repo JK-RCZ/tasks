@@ -1,3 +1,4 @@
+
 module "vpc" {
   source                                = "../modules/aws-vpc"
   vpc                                   = {
@@ -5,6 +6,7 @@ module "vpc" {
     tenancy                             = var.vpc.tenancy
     cidr_block                          = var.vpc.cidr_block
     name                                = var.vpc.name
+    ebs_encryption_params               = var.vpc.ebs_encryption_params
     }
   common_tags                           = var.common_tags
 }
@@ -44,19 +46,26 @@ module "private_root_table" {
   depends_on                            = [ module.vpc, module.subnets, module.nat ]
 }
 
-module "rds" {
-  source                                = "../modules/aws-rds"
-  rds                                   = var.rds
+module "s3_buffer" {
+  source                                = "../modules/aws-s3-bucket"
+  s3_bucket                             = var.s3_bucket
   common_tags                           = var.common_tags
-  depends_on                            = [ module.subnets, module.rds_security_group ]
 }
 
-module "ec2_1" {
+module "ec2_master" {
   source                                = "../modules/aws-ec2-instance"
-  ec2                                   = var.ec2
+  ec2                                   = var.ec2_master
+  common_tags                           = var.common_tags 
+  public_key_contents                   = var.public_key_contents 
+  depends_on                            = [ module.k8s_master_node_security_group, module.subnets, module.load_balancer, module.ec2_role, module.s3_buffer ]
+}
+
+module "ec2_worker" {
+  source                                = "../modules/aws-ec2-instance"
+  ec2                                   = var.ec2_worker
   common_tags                           = var.common_tags  
   public_key_contents                   = var.public_key_contents
-  depends_on                            = [ module.ec2_1_security_group, module.subnets, module.rds, module.load_balancer ]
+  depends_on                            = [ module.k8s_worker_node_security_group, module.subnets, module.load_balancer, module.ec2_role, module.s3_buffer ]
 }
 
 module "load_balancer" {
@@ -66,57 +75,36 @@ module "load_balancer" {
   depends_on                            = [ module.subnets ]
 }
 
-module "tg_80" {
+module "worker_node_target_group_port_80" {
   source                                = "../modules/aws-target-group"
   target_group                          = var.tg_80
   common_tags                           = var.common_tags
-  depends_on                            = [ module.vpc, module.ec2_1, module.load_balancer ]
+  depends_on                            = [ module.vpc, module.ec2_worker, module.load_balancer ]
 }
 
-module "ec2_1_security_group" {
+module "k8s_master_node_security_group" {
   source                                = "../modules/aws-security-group"
-<<<<<<< HEAD
-  security_group                        = var.sec_1
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_1
-=======
-  security_group                        = var.security_1
->>>>>>> ac429b2 (finished creating k8s scripts)
+  security_group                        = var.security_k8s_master_node
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
 
-module "rds_security_group" {
+module "k8s_worker_node_security_group" {
   source                                = "../modules/aws-security-group"
-<<<<<<< HEAD
-  security_group                        = var.sec_2
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_2
-=======
-  security_group                        = var.security_2
->>>>>>> ac429b2 (finished creating k8s scripts)
+  security_group                        = var.security_k8s_worker_node
   common_tags                           = var.common_tags
-  depends_on                            = [ module.vpc, module.ec2_1_security_group ]
-  
+  depends_on                            = [ module.vpc ]
 }
 
-<<<<<<< HEAD
-
-=======
 module "ec2_role" {
   source                                = "../modules/aws-iam-role"
-  iam_role                              = var.ec2_role
+  iam_role                              = var.ec2_role_1
   common_tags                           = var.common_tags 
-  depends_on                            = [ module.ssm_s3_kms_policy ] 
+  depends_on                            = [ module.ssm_policy ] 
 }
 
-module "s3_backup" {
-  source                                = "../modules/aws-s3-bucket"
-  s3_bucket                             = var.s3_bucket
-  common_tags                           = var.common_tags
-}
-
-module "ssm_s3_kms_policy" {
+module "ssm_policy" {
   source                                = "../modules/aws-policy"
   iam_policy                            = var.iam_policy
   common_tags                           = var.common_tags
 }
->>>>>>> ac429b2 (finished creating k8s scripts)

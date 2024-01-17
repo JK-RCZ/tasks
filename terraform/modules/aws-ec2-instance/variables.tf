@@ -4,7 +4,7 @@
 variable "ec2" {
     description                         = "EC2, assotiated security group and RDS instance parameters"
     type                                = object({
-      public_key_name                   = string
+      public_key_name                     = string
       instance_parameters               = object(
         {
             instance_name               = string
@@ -25,8 +25,8 @@ variable "ec2" {
 }
 
 variable "public_key_contents" {
-    description                         = "Public key contents. Do not describe this variable in your tfvars file to securely input it either on prompt after terraform plan/apply command or add it to terraform enviroment variable before the launch by command: export TF_VAR_public_key_contents='your public key' "
-    type                                = string  
+  description = "Contents of public key to use in EC2"
+  type = string
 }
 
 variable "common_tags" {

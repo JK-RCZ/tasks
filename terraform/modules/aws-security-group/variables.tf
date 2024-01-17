@@ -8,10 +8,15 @@ variable "security_group" {
             vpc_name                             = string
             sg_name                              = string
             sg_descritption                      = string
+            traffic_from_security_groups_only    = object({
+              allow_traffic                      = bool
+              security_groups_names              = list(string) # list security group names, that you want to allow traffic from (enabled only if allow_traffic = true)
+            })
             ingress                              = list(object(
                 {
                     ingress_description          = string
-                    ingress_port                 = string
+                    ingress_from_port            = string
+                    ingress_to_port              = string
                     ingress_protocol             = string
                     ingress_cidr_blocks          = list(string)
                     ingress_ipv6_cidr_blocks     = list(string)
@@ -30,11 +35,14 @@ variable "security_group" {
   
 }
 
+<<<<<<< HEAD
 variable "ingress_from_existent_security_groups" {
     description                                  = "List of security groups from which traffic allowed"
     type                                         = list(string)
 }
 
+=======
+>>>>>>> ac429b2 (finished creating k8s scripts)
 variable "common_tags" {
     description                                  = "Tags suitable for all resources"
     type                                         = map
