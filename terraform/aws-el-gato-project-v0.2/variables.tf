@@ -180,8 +180,6 @@ variable "sec_1" {
                     egress_cidr_blocks           = list(string)
             })
         })
-<<<<<<< HEAD
-=======
 }
 
 variable "allow_from_security_groups_1" {
@@ -233,7 +231,6 @@ variable "ec2_role" {
         trusted_entities_policy_file_path        = string
         policy_name                              = string
     })
->>>>>>> ac429b2 (finished creating k8s scripts)
   
 }
 

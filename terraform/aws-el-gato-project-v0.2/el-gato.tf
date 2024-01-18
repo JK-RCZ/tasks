@@ -75,32 +75,19 @@ module "tg_80" {
 
 module "ec2_1_security_group" {
   source                                = "../modules/aws-security-group"
-<<<<<<< HEAD
-  security_group                        = var.sec_1
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_1
-=======
   security_group                        = var.security_1
->>>>>>> ac429b2 (finished creating k8s scripts)
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc ]
 }
 
 module "rds_security_group" {
   source                                = "../modules/aws-security-group"
-<<<<<<< HEAD
-  security_group                        = var.sec_2
-  ingress_from_existent_security_groups = var.ingress_from_existent_security_groups_for_sec_2
-=======
   security_group                        = var.security_2
->>>>>>> ac429b2 (finished creating k8s scripts)
   common_tags                           = var.common_tags
   depends_on                            = [ module.vpc, module.ec2_1_security_group ]
   
 }
 
-<<<<<<< HEAD
-
-=======
 module "ec2_role" {
   source                                = "../modules/aws-iam-role"
   iam_role                              = var.ec2_role
@@ -119,4 +106,3 @@ module "ssm_s3_kms_policy" {
   iam_policy                            = var.iam_policy
   common_tags                           = var.common_tags
 }
->>>>>>> ac429b2 (finished creating k8s scripts)

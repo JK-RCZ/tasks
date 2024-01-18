@@ -10,7 +10,7 @@ data "aws_vpc" "data" {
 }
 
 data "aws_security_group" "data" {
-    for_each                   = toset(var.ingress_from_existent_security_groups)
+    for_each                   = toset(var.security_group.traffic_from_security_groups_only.security_groups_names)
     tags                       = {
       Name                     = each.key
     }

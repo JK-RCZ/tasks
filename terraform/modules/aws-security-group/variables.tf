@@ -35,14 +35,6 @@ variable "security_group" {
   
 }
 
-<<<<<<< HEAD
-variable "ingress_from_existent_security_groups" {
-    description                                  = "List of security groups from which traffic allowed"
-    type                                         = list(string)
-}
-
-=======
->>>>>>> ac429b2 (finished creating k8s scripts)
 variable "common_tags" {
     description                                  = "Tags suitable for all resources"
     type                                         = map
