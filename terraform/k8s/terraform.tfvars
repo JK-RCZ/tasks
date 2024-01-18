@@ -100,7 +100,7 @@ ec2_master                                               = {
   instance_parameters                                    = {
     instance_name                                        = "k8s-master-node"
     instance_ami                                         = "ami-0014ce3e52359afbd" # Ubuntu "ami-06478978e5e72679a" # Amazon-Linux 
-    instance_type                                        = "t3.medium"
+    instance_type                                        = "t3.small"
     subnet_name                                          = "Private Subnet 1"
     associate_public_ip_address                          = false
     user_data_path                                       = "scripts/install-k8s-master-ubuntu.sh"
@@ -126,10 +126,10 @@ ec2_worker                                               = {
   instance_parameters                                    = {
     instance_name                                        = "k8s-worker-node"
     instance_ami                                         = "ami-0014ce3e52359afbd" # Ubuntu "ami-06478978e5e72679a" # Amazon-Linux
-    instance_type                                        = "t3.medium"
+    instance_type                                        = "t3.small"
     subnet_name                                          = "Private Subnet 2"
     associate_public_ip_address                          = false
-    user_data_path                                       = "scripts/install-k8s-master-ubuntu.sh"
+    user_data_path                                       = "scripts/install-k8s-worker-ubuntu.sh"
     security_group_names                                 = [ "k8s-worker-node-sg" ]
     volume_path                                          = "/dev/sdh"
     volume_size_gb                                       = "20"
@@ -182,14 +182,74 @@ tg_80                                                    = {
 security_k8s_master_node                                 = {
   vpc_name                                               = "k8s-vpc"
   sg_name                                                = "k8s-master-node-sg"
-  sg_descritption                                        = "Allow 6443, 2379-2380, 10250, 10259, 10257 inbound from security_k8s_worker_node, allow all outbound to 0.0.0.0/0"
+  sg_descritption                                        = "Allow TCP 179, UDP 4789, TCP 5473, UDP 51820-51821, UDP 4789, TCP 443, TCP 6443, TCP 2379-2380, TCP 10250, TCP 10259, TCP 10257 inbound from security_k8s_worker_node, allow all outbound to 0.0.0.0/0"
   traffic_from_security_groups_only                      = {
       allow_traffic                                      = false
       security_groups_names                              = []
   }
   ingress                                                = [ 
     {
-      ingress_description                                = "allow port 6443"
+      ingress_description                                = "allow port TCP 179"
+      ingress_from_port                                  = "179"
+      ingress_to_port                                    = "179"
+      ingress_protocol                                   = "tcp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow port UDP 4789"
+      ingress_from_port                                  = "4789"
+      ingress_to_port                                    = "4789"
+      ingress_protocol                                   = "udp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow port TCP 5473"
+      ingress_from_port                                  = "5473"
+      ingress_to_port                                    = "5473"
+      ingress_protocol                                   = "tcp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow ports UDP 51820-51821"
+      ingress_from_port                                  = "51820"
+      ingress_to_port                                    = "51821"
+      ingress_protocol                                   = "udp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow port UDP 4789"
+      ingress_from_port                                  = "4789"
+      ingress_to_port                                    = "4789"
+      ingress_protocol                                   = "udp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow port TCP 443"
+      ingress_from_port                                  = "443"
+      ingress_to_port                                    = "443"
+      ingress_protocol                                   = "tcp"
+      ingress_cidr_blocks                                = ["10.0.0.0/20", "10.0.16.0/20"]
+      ingress_ipv6_cidr_blocks                           = []
+      ingress_prefix_list_ids                            = []
+      ingress_self                                       = false
+    },
+    {
+      ingress_description                                = "allow port TCP 6443"
       ingress_from_port                                  = "6443"
       ingress_to_port                                    = "6443"
       ingress_protocol                                   = "tcp"
@@ -199,7 +259,7 @@ security_k8s_master_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 2379-2380"
+      ingress_description                                = "allow ports TCP 2379-2380"
       ingress_from_port                                  = "2379"
       ingress_to_port                                    = "2380"
       ingress_protocol                                   = "tcp"
@@ -209,7 +269,7 @@ security_k8s_master_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 10250"
+      ingress_description                                = "allow port TCP 10250"
       ingress_from_port                                  = "10250"
       ingress_to_port                                    = "10250"
       ingress_protocol                                   = "tcp"
@@ -219,7 +279,7 @@ security_k8s_master_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 10259"
+      ingress_description                                = "allow port TCP 10259"
       ingress_from_port                                  = "10259"
       ingress_to_port                                    = "10259"
       ingress_protocol                                   = "tcp"
@@ -229,7 +289,7 @@ security_k8s_master_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 10257"
+      ingress_description                                = "allow port TCP 10257"
       ingress_from_port                                  = "10257"
       ingress_to_port                                    = "10257"
       ingress_protocol                                   = "tcp"
@@ -250,14 +310,14 @@ security_k8s_master_node                                 = {
 security_k8s_worker_node                                 = {
   vpc_name                                               = "k8s-vpc"
   sg_name                                                = "k8s-worker-node-sg"
-  sg_descritption                                        = "Allow port 80, 10250, 30000-32767 inbound from security_k8s_master_node, allow all outbound to 0.0.0.0/0"
+  sg_descritption                                        = "Allow port TCP 80, TCP 10250, TCP 30000-32767 inbound from security_k8s_master_node, allow all outbound to 0.0.0.0/0"
   traffic_from_security_groups_only                      = {
       allow_traffic                                      = false
       security_groups_names                              = [] 
   }
   ingress                                                = [ 
     {
-      ingress_description                                = "allow port 80"
+      ingress_description                                = "allow port TCP 80"
       ingress_from_port                                  = "80"
       ingress_to_port                                    = "80"
       ingress_protocol                                   = "tcp"
@@ -267,7 +327,7 @@ security_k8s_worker_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 10250"
+      ingress_description                                = "allow port TCP 10250"
       ingress_from_port                                  = "10250"
       ingress_to_port                                    = "10250"
       ingress_protocol                                   = "tcp"
@@ -277,7 +337,7 @@ security_k8s_worker_node                                 = {
       ingress_self                                       = false
     },
     {
-      ingress_description                                = "allow port 30000-32767"
+      ingress_description                                = "allow ports TCP 30000-32767"
       ingress_from_port                                  = "30000"
       ingress_to_port                                    = "32767"
       ingress_protocol                                   = "tcp"
