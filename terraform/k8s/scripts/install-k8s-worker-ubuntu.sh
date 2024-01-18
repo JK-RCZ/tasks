@@ -60,3 +60,4 @@ aws s3 cp s3://${s3_bucket_name}/init-worker-node.sh /tmp/init-worker-node.sh
 # Launch init command from master node
 chmod 755 /tmp/init-worker-node.sh
 /bin/bash /tmp/init-worker-node.sh | tee /tmp/init-worker-log.txt
+# -----------------------------------------------------------------------------------------------------------------------------------

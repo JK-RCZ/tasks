@@ -56,9 +56,12 @@ apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 # Initialize control plane
 kubeadm init --pod-network-cidr=192.168.0.0/16 | tee /tmp/temp.txt
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 mkdir -p /root/.kube
 cp -i /etc/kubernetes/admin.conf /root/.kube/config
-export KUBECONFIG=/etc/kubernetes/admin.conf
+#export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/custom-resources.yaml
 # Create bash script in order to launch init command on worker node
@@ -66,4 +69,4 @@ echo "#!/bin/bash" > /tmp/init-worker-node.sh
 tail -n 2 /tmp/temp.txt >> /tmp/init-worker-node.sh
 # Copy /tmp/init-worker-node.sh to S3
 aws s3 cp /tmp/init-worker-node.sh s3://${s3_bucket_name}
-
+# -----------------------------------------------------------------------------------------------------------------------------------
