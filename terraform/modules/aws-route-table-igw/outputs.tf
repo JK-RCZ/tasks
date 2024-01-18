@@ -1,7 +1,7 @@
-output "Route-Table-Data" {
+output "route_table_data" {
    description = "Route table main data"
     value      = {
-        Name   = aws_route_table.uno.tags.Name
-        ID     = aws_route_table.uno.id
+        name   = aws_route_table.this.tags.Name
+        id     = aws_route_table.this.id
     }
 }

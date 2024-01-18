@@ -1,10 +1,9 @@
-output "RDS-Data" {
+
+output "rds_data" {
     description = "RDS main data"
     value = {
-        Name = aws_db_instance.funf.identifier
-        ID   = aws_db_instance.funf.id
-        Endpoint = aws_db_instance.funf.address
-
+        name = aws_db_instance.this.identifier
+        id   = aws_db_instance.this.id
+        endpoint = aws_db_instance.this.address
     }
-  
 }
