@@ -66,3 +66,10 @@ variable "rds_security_group" {
         })
   
 }
+
+variable "other_parameters" {
+    type = object({
+      ssm_key_name = string
+    })
+  
+}

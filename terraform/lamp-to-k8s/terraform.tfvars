@@ -30,16 +30,16 @@ rds                                                    = {
 }
 
 rds_security_group                                     = {
-  vpc_name                                             = "el-gato-vpc"
-  sg_name                                              = "Sec 2"
-  sg_descritption                                      = "Allow 3306 inbound from security group sec_1, deny all outbound"
+  vpc_name                                             = "k8s-vpc"
+  sg_name                                              = "mariadb-security"
+  sg_descritption                                      = "Allow 3306 inbound from security group mariadb-security, deny all outbound"
   traffic_from_security_groups_only                    = {
       allow_traffic                                    = true
-      security_groups_names                            = ["Sec 1"]
+      security_groups_names                            = ["mariadb-security"]
   }
   ingress                                              = [ 
     {
-      ingress_description                              = "allow port 3306 from sec_1"
+      ingress_description                              = "allow port TCP 3306 from mariadb-security"
       ingress_from_port                                = "3306"
       ingress_to_port                                  = "3306"
       ingress_protocol                                 = "tcp"
@@ -55,6 +55,10 @@ rds_security_group                                     = {
       egress_protocol                                  = "0"
       egress_cidr_blocks                               = []
   }
+}
+
+other_parameters = {
+  ssm_key_name = "mariadb_pass"
 }
 
 
