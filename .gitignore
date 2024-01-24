@@ -7,6 +7,9 @@
 #Lock files
 *.terraform.lock.hcl
 
+#Temp file
+temp
+
 # .tfstate files
 *.tfstate
 *.tfstate.*

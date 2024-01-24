@@ -1,0 +1,74 @@
+version: 0.2
+
+env:
+  parameter-store:
+    neolab_apiroot: neolab/apiroot
+    neolab_rooturl: neolab/rooturl
+    neolab_loglevel: neolab/loglevel
+    neolab_emailsender: neolab/emailsender
+    neolab_secret: neolab/secret
+    neolab_upssync_queue_name: neolab/upssync_queue_name
+    neolab_email_backend: neolab/email_backend
+    neolab_api_allowed_ips: neolab/api_allowed_ips
+    neolab_es_endpoint: neolab/es_endpoint
+    neolab_es_index_prefix: neolab/es_index_prefix
+    neolab_pause_emailsender: neolab/pause_emailsender
+    neolab_backend_replicas: neolab/backend_replicas
+    neolab_email_period_seconds: neolab/email_period_seconds
+    neolab_sync_attachments_high_limit_minutes: neolab/sync_attachments_high_limit_minutes
+    neolab_sync_attachments_low_limit_minutes: neolab/sync_attachments_low_limit_minutes
+    neolab_es_message_queue_url: neolab/es_message_queue_url
+    neolab_es_message_queue_name: neolab/es_message_queue_name
+    neolab_celeryworker_replicas: neolab/celeryworker_replicas
+    neolab_celery_worker_concurrency: neolab/celery_worker_concurrency
+    neolab_wicked_quick_deadline_hour: neolab/wicked_quick_deadline_hour
+    neolab_certificate_arn: neolab/certificate_arn
+    neolab_email_engine: neolab/email_engine
+    neolab_support_team_email: neolab/support_team_email
+    neolab_aws_region: neolab/aws/region
+    neolab_aws_pinpoint_app_id: neolab/aws/pinpoint_app_id
+    neolab_aws_ses_region: neolab/aws/ses/region
+    neolab_aws_cloudfront_keyid: neolab/aws/cloudfront/keyid
+    neolab_aws_cloudfront_keyfile: neolab/aws/cloudfront/keyfile
+    neolab_ups_username: neolab/ups/username
+    neolab_ups_password: neolab/ups/password
+    neolab_ups_access_license_number: neolab/ups/access_license_number
+    neolab_ups_account_number: neolab/ups/account_number
+    neolab_ups_shipping_label_url: neolab/ups/shipping_label_url
+    neolab_ups_url_tnt: neolab/ups/url_tnt
+    neolab_ups_client_id: neolab/ups/client_id
+    neolab_ups_client_secret: neolab/ups/client_secret
+    neolab_ups_api_base_url: neolab/ups/api_base_url
+    neolab_easyrx_user: neolab/easyrx/user
+    neolab_easyrx_password: neolab/easyrx/password
+    neolab_easyrx_url_open_cases: neolab/easyrx/url_open_cases
+    neolab_easyrx_url_get_case: neolab/easyrx/url_get_case
+    neolab_easyrx_url_get_file: neolab/easyrx/url_get_file
+    neolab_easyrx_url_update_case: neolab/easyrx/url_update_case
+    neolab_admin_name: neolab/admin/name
+    neolab_admin_email: neolab/admin/email
+    neolab_admin_password: neolab/admin/password
+    neolab_db_host: neolab/db/host
+    neolab_db_user: neolab/db/user
+    neolab_db_name: neolab/db/name
+    neolab_db_password: neolab/db/password
+    neolab_s3_app: neolab/s3/app
+    neolab_s3_tmp: neolab/s3/tmp
+    neolab_s3_web: neolab/s3/web
+    neolab_cache_urls: neolab/cache/urls
+    neolab_zebra_printer_sn: neolab/zebra/printer_sn
+    neolab_zebra_api_key: neolab/zebra/api_key
+    neolab_zebra_tenant: neolab/zebra/tenant
+    neolab_zebra_send_to_s3_instead: neolab/zebra/send_to_s3_instead
+    neolab_quickbooks_client_id: neolab/quickbooks/client_id
+    neolab_quickbooks_client_secret: neolab/quickbooks/client_secret
+    neolab_quickbooks_company_id: neolab/quickbooks/company_id
+    neolab_quickbooks_base_url: neolab/quickbooks/base_url
+    neolab_quickbooks_sandbox: neolab/quickbooks/sandbox
+    neolab_quickbooks_account_id: neolab/quickbooks/account_id
+    neolab_quickbooks_account_name: neolab/quickbooks/account_name
+    neolab_quickbooks_expense_account_id: neolab/quickbooks/expense_account_id
+    neolab_quickbooks_is_allowed: neolab/quickbooks/is_allowed
+phases:
+  build:
+    commands:
