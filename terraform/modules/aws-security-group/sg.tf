@@ -10,14 +10,14 @@ resource "aws_security_group" "this" {
     for_each                   = toset(var.security_group.ingress)
     content {
         description            = ingress.value ["ingress_description"]
-        from_port              = ingress.value ["ingress_port"]
-        to_port                = ingress.value ["ingress_port"]
+        from_port              = ingress.value ["ingress_from_port"]
+        to_port                = ingress.value ["ingress_to_port"]
         protocol               = ingress.value ["ingress_protocol"]
         cidr_blocks            = ingress.value ["ingress_cidr_blocks"]
         ipv6_cidr_blocks       = ingress.value ["ingress_ipv6_cidr_blocks"]
         prefix_list_ids        = ingress.value ["ingress_prefix_list_ids"]
         self                   = ingress.value ["ingress_self"]
-        security_groups        = local.sg_ids
+        security_groups        = var.security_group.traffic_from_security_groups_only.allow_traffic ? local.sg_ids : null
     }
   }
   egress {

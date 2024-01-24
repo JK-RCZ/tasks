@@ -75,39 +75,88 @@ variable "route_table_nat" {
     })  
 }
 
-variable "ec2" {
-    description                         = "EC2, assotiated security group and RDS instance parameters"
-    type                                = object({
-      public_key_name                   = string
-      instance_parameters               = object(
-        {
-            instance_name               = string
-            instance_ami                = string
-            instance_type               = string
-            volume_path                 = string
-            volume_size_gb              = string
-            subnet_name                 = string
-            associate_public_ip_address = bool
-            user_data_path              = string
-            security_group_names        = list(string)
-        })
-      rds_instance_parameters           = object({
-        gather_rds_instance_data        = bool
-        rds_instance_name               = string
-        ssm_key_name                    = string
-        load_balancer_name              = string
+variable "s3_bucket" {
+    description                                  = "S3 bucket parameters"
+    type                                         = object({
+      bucket_name                                = string
+      bucket_versioning                          = string 
+      s3_encryption_params                       = object({
+        enble_encryption                         = bool
+        deletion_window_in_days                  = string
+        customer_master_key_spec                 = string
       })
-      instance_profile_parameters       = object({
-        create_instance_profile         = bool
-        instance_profile_name           = string
-        attach_role_name                = string
+      s3_intelligent_tiering_params              = object({
+        enable_intelligent_tiering               = bool
+        intelligent_tiering_config_name          = string  
+        days_after_deep_archive_access_allowed   = string
+        days_after_archive_access_allowed        = string
+      })
+    })
+}
+
+variable "ec2_master" {
+    description                                  = "EC2, assotiated security group and RDS instance parameters"
+    type                                         = object({
+      public_key_name                            = string
+      instance_parameters                        = object(
+        {
+            instance_name                        = string
+            instance_ami                         = string
+            instance_type                        = string
+            volume_path                          = string
+            volume_size_gb                       = string
+            subnet_name                          = string
+            associate_public_ip_address          = bool
+            user_data_path                       = string
+            security_group_names                 = list(string)
+        })
+      rds_instance_parameters                    = object({
+        gather_rds_instance_data                 = bool
+        rds_instance_name                        = string
+        ssm_key_name                             = string
+        load_balancer_name                       = string
+      })
+      instance_profile_parameters                = object({
+        create_instance_profile                  = bool
+        instance_profile_name                    = string
+        attach_role_name                         = string
       })
     })
 }
 
 variable "public_key_contents" {
-    description                                  = "Public key contents. Do not describe this variable in your tfvars file to securely input it either on prompt after terraform plan/apply command or add it to terraform enviroment variable before the launch by command: export TF_VAR_public_key_contents='your public key' "
-    type                                         = string  
+  description                                    = "Contents of public key to use in EC2"
+  type                                           = string
+}
+
+variable "ec2_worker" {
+    description                                  = "EC2, assotiated security group and RDS instance parameters"
+    type                                         = object({
+      public_key_name                          = string
+      instance_parameters                        = object(
+        {
+            instance_name                        = string
+            instance_ami                         = string
+            instance_type                        = string
+            volume_path                          = string
+            volume_size_gb                       = string
+            subnet_name                          = string
+            associate_public_ip_address          = bool
+            user_data_path                       = string
+            security_group_names                 = list(string)
+        })
+      rds_instance_parameters                    = object({
+        gather_rds_instance_data                 = bool
+        rds_instance_name                        = string
+        ssm_key_name                             = string
+        load_balancer_name                       = string
+      })
+      instance_profile_parameters                = object({
+        create_instance_profile                  = bool
+        instance_profile_name                    = string
+        attach_role_name                         = string
+      })
+    })
 }
 
 variable "load_balancer" {
@@ -136,33 +185,7 @@ variable "tg_80" {
     })
 }
 
-variable "rds" {
-    description                                  = "RDS, RDS password and RDS security group parameters"
-    type                                         = object({
-        rds_params                               = object({
-            subnet_names                         = list(string)
-            rds_instance_name                    = string
-            rds_family                           = string
-            rds_allocated_storage                = string
-            rds_storage_type                     = string
-            rds_db_name                          = string
-            rds_engine                           = string
-            rds_engine_version                   = string
-            rds_instance_class                   = string
-            rds_username                         = string
-            rds_skip_final_snapshot              = bool
-            rds_publicly_accessible              = bool
-            rds_security_group_names             = list(string)
-        })
-        password_params                          = object({
-            name                                 = string
-            length                               = string
-            type                                 = string
-        })
-    })
-}
-
-variable "security_1" {
+variable "security_k8s_master_node" {
     type                                         = object(
         {
             vpc_name                             = string
@@ -194,12 +217,7 @@ variable "security_1" {
         })
 }
 
-variable "allow_from_security_groups_1" {
-    description                                  = "List of security groups from which traffic allowed"
-    type                                         = list(string)
-}
-
-variable "security_2" {
+variable "security_k8s_worker_node" {
     type                                         = object(
         {
             vpc_name                             = string
@@ -231,12 +249,7 @@ variable "security_2" {
         })
 }
 
-variable "allow_from_security_groups_2" {
-    description                                  = "List of security groups from which traffic allowed"
-    type                                         = list(string)
-}
-
-variable "ec2_role" {
+variable "ec2_role_1" {
     description                                  = "Specify trusted entities policy file path and policies arns that you want to apply to this role"
     type                                         = object({
         iam_role_name                            = string
@@ -244,25 +257,6 @@ variable "ec2_role" {
         policy_name                              = string
     })
   
-}
-
-variable "s3_bucket" {
-    description                                  = "S3 bucket parameters"
-    type                                         = object({
-      bucket_name                                = string
-      bucket_versioning                          = string 
-      s3_encryption_params                       = object({
-        enble_encryption                         = bool
-        deletion_window_in_days                  = string
-        customer_master_key_spec                 = string
-      })
-      s3_intelligent_tiering_params              = object({
-        enable_intelligent_tiering               = bool
-        intelligent_tiering_config_name          = string  
-        days_after_deep_archive_access_allowed   = string
-        days_after_archive_access_allowed        = string
-      })
-    })
 }
 
 variable "iam_policy" {
