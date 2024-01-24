@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wordpress
+  name: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: wordpress
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: wordpress
+    spec:
+      containers:
+        - env:
+            - name: REDIS_HOST
+              value: cache
+            - name: REDIS_PORT
+              value: "6379"
+          image: wordpress
+          name: wordpress-webserver
+          resources: {}
+      restartPolicy: Always
+status: {}

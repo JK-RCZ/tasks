@@ -27,6 +27,8 @@ services:
     container_name: redis-cache
     restart: always
     command: redis-server --save 20 1 --loglevel warning
+    ports:
+      - "33306:3306"
 
   nginx:
     build:
@@ -34,7 +36,7 @@ services:
     container_name: nginx_reverse_proxy
     restart: always
     ports:
-      - "80:80"
+      - "30080:80"
     
 
     
