@@ -16,7 +16,7 @@ module "rds_security_group" {
 */
 resource "terraform_data" "launch_lamp" {
   provisioner "local-exec" {
-    command = "/home/ykarchevsky/tasks/terraform/lamp-to-k8s/scripts/lamp-deploy-k8s.sh"
+    command = "/home/ykarchevsky/tasks/terraform/lamp-to-k8s/scripts/launch-remote-script.sh"
     interpreter = ["bash"]
   }
 }

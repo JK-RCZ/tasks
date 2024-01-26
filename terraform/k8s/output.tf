@@ -14,7 +14,8 @@ output "environment" {
         module.k8s_master_node_security_group,
         module.k8s_worker_node_security_group,
         module.ssm_policy,
-        module.ec2_role
+        module.ec2_role,
+        module.s3_buffer
     ]
 }
 
