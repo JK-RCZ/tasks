@@ -12,7 +12,7 @@
 script_file=remote.sh
 script_file_path=/home/ykarchevsky/tasks/terraform/lamp-to-k8s/scripts
 s3_name=s3://k8s-buffer-19556
-ec2_id=i-07493c384c1d0eca2
+ec2_id=i-0314e04fc95a2bdf1
 script_path=/tmp
 
 # ----------------------------------------------------------------------------------------------------------------------------
@@ -20,6 +20,7 @@ script_path=/tmp
 # Action ---------------------------------------------------------------------------------------------------------------------
 aws s3 cp $script_file_path/$script_file $s3_name
 aws ssm start-session --target $ec2_id
+sudo su root
 aws s3 cp $s3_name/$script_file $script_path
 chmod 755 $script_path/$script_file
 $script_path/$script_file
